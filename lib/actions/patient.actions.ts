@@ -1,6 +1,6 @@
 "use server";
 
-import { ID, InputFile, Query } from "node-appwrite";
+import { ID, Query } from "node-appwrite";
 
 import {
   BUCKET_ID,
@@ -17,7 +17,6 @@ import { parseStringify } from "../utils";
 // CREATE APPWRITE USER
 export const createUser = async (user: CreateUserParams) => {
   try {
-    // Create new user -> https://appwrite.io/docs/references/1.5.x/server-nodejs/users#create
     const newuser = await users.create(
       ID.unique(),
       user.email,
@@ -28,7 +27,6 @@ export const createUser = async (user: CreateUserParams) => {
 
     return parseStringify(newuser);
   } catch (error: any) {
-    // Check existing user
     if (error && error?.code === 409) {
       const existingUser = await users.list([
         Query.equal("email", [user.email]),
@@ -37,6 +35,7 @@ export const createUser = async (user: CreateUserParams) => {
       return existingUser.users[0];
     }
     console.error("An error occurred while creating a new user:", error);
+    throw error;
   }
 };
 
@@ -51,38 +50,59 @@ export const getUser = async (userId: string) => {
       "An error occurred while retrieving the user details:",
       error
     );
+    throw error;
+  }
+};
+
+// Helper function to convert gender to English format
+const convertGenderToEnglish = (
+  gender: string
+): "male" | "female" | "other" => {
+  switch (gender) {
+    case "muž":
+      return "male";
+    case "žena":
+      return "female";
+    case "jiné":
+      return "other";
+    default:
+      throw new Error(`Unknown gender value: ${gender}`);
   }
 };
 
 // REGISTER PATIENT
 export const registerPatient = async ({
   identificationDocument,
+  gender,
   ...patient
 }: RegisterUserParams) => {
   try {
-    // Upload file ->  // https://appwrite.io/docs/references/cloud/client-web/storage#createFile
     let file;
-    if (identificationDocument) {
-      const inputFile =
-        identificationDocument &&
-        InputFile.fromBlob(
-          identificationDocument?.get("blobFile") as Blob,
-          identificationDocument?.get("fileName") as string
-        );
+    if (
+      identificationDocument &&
+      identificationDocument.has("blobFile") &&
+      identificationDocument.has("fileName")
+    ) {
+      const blobFile = identificationDocument.get("blobFile") as Blob;
+      const fileName = identificationDocument.get("fileName") as string;
 
-      file = await storage.createFile(BUCKET_ID!, ID.unique(), inputFile);
+      const fileToUpload = new File([blobFile], fileName, {
+        type: blobFile.type,
+      });
+
+      file = await storage.createFile(BUCKET_ID!, ID.unique(), fileToUpload);
     }
 
-    // Create new patient document -> https://appwrite.io/docs/references/cloud/server-nodejs/databases#createDocument
     const newPatient = await databases.createDocument(
       DATABASE_ID!,
       PATIENT_COLLECTION_ID!,
       ID.unique(),
       {
-        identificationDocumentId: file?.$id ? file.$id : null,
+        identificationDocumentId: file?.$id || null,
         identificationDocumentUrl: file?.$id
-          ? `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file.$id}/view??project=${PROJECT_ID}`
+          ? `${ENDPOINT}/storage/buckets/${BUCKET_ID}/files/${file.$id}/view?project=${PROJECT_ID}`
           : null,
+        gender: convertGenderToEnglish(gender), // Convert gender to English format
         ...patient,
       }
     );
@@ -90,6 +110,7 @@ export const registerPatient = async ({
     return parseStringify(newPatient);
   } catch (error) {
     console.error("An error occurred while creating a new patient:", error);
+    throw error;
   }
 };
 
@@ -108,5 +129,6 @@ export const getPatient = async (userId: string) => {
       "An error occurred while retrieving the patient details:",
       error
     );
+    throw error;
   }
 };
