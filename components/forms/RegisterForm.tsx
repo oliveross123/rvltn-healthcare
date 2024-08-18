@@ -35,7 +35,7 @@ const RegisterForm = ({ user }: { user: User }) => {
   const router = useRouter();
   const [isLoading, setisLoading] = useState(false);
 
-  // 1. Define your form.
+  // 1. Definice formuláře.
   const form = useForm<z.infer<typeof PatientFormValidation>>({
     resolver: zodResolver(PatientFormValidation),
     defaultValues: {
@@ -43,25 +43,34 @@ const RegisterForm = ({ user }: { user: User }) => {
       name: "",
       email: "",
       phone: "",
-      gender: "muž", // Default gender value in Czech
+      gender: "muž", // Správná výchozí hodnota pohlaví v angličtině
     },
   });
 
-  // 2. Function to convert gender to Czech values
-  const convertGenderToCzech = (gender: string): "muž" | "žena" | "jiné" => {
+  // 2. Funkce pro převod pohlaví do anglických hodnot
+  const convertGenderToEnglish = (
+    gender: string
+  ): "male" | "female" | "other" => {
     switch (gender) {
-      case "Male":
-        return "muž";
-      case "Female":
-        return "žena";
-      case "Other":
-        return "jiné";
+      case "muž":
+        return "male";
+      case "žena":
+        return "female";
+      case "jiné":
+        return "other";
+      case "male":
+      case "female":
+      case "other":
+        return gender; // Vrátíme hodnotu přímo, pokud je již v angličtině
       default:
-        return "jiné";
+        console.warn(
+          `Unknown gender value: ${gender}. Returning 'other' by default.`
+        );
+        return "other"; // Vrátíme "other", pokud je hodnota neznámá
     }
   };
 
-  // 3. Define a submit handler.
+  // 3. Definice handleru pro odeslání formuláře.
   async function onSubmit(values: z.infer<typeof PatientFormValidation>) {
     setisLoading(true);
 
@@ -83,7 +92,7 @@ const RegisterForm = ({ user }: { user: User }) => {
     try {
       const patientData = {
         ...values,
-        gender: convertGenderToCzech(values.gender), // Convert gender before submitting
+        gender: convertGenderToEnglish(values.gender), // Převeďte pohlaví do angličtiny před odesláním
         userId: user.$id,
         birthDate: new Date(values.birthDate),
         identificationDocument: formData,
@@ -123,7 +132,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             control={form.control}
             name="name"
             label="Full name"
-            placeholder="John Doe"
+            placeholder="Jan Novák"
             iconSrc="/assets/icons/user.svg"
             iconAlt="User"
           />
@@ -134,7 +143,7 @@ const RegisterForm = ({ user }: { user: User }) => {
               control={form.control}
               name="email"
               label="Email"
-              placeholder="johndoe@email.com"
+              placeholder="jnovak@email.cz"
               iconSrc="/assets/icons/email.svg"
               iconAlt="email icon"
             />
@@ -191,7 +200,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             <CustomFormField
               fieldType={FormFieldType.INPUT}
               control={form.control}
-              name="address" // Corrected the typo here
+              name="address"
               label="Adresa"
               placeholder="1. říjná 1, Praha 1"
             />

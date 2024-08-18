@@ -65,8 +65,15 @@ const convertGenderToEnglish = (
       return "female";
     case "jiné":
       return "other";
+    case "male":
+    case "female":
+    case "other":
+      return gender; // Pokud je hodnota už v angličtině, vrátíme ji beze změny
     default:
-      throw new Error(`Unknown gender value: ${gender}`);
+      console.warn(
+        `Unknown gender value: ${gender}. Returning 'other' by default.`
+      );
+      return "other"; // Vrátíme "other" pro neznámé hodnoty místo vyvolání chyby
   }
 };
 
