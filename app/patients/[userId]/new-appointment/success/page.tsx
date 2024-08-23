@@ -15,10 +15,12 @@ const Success = async ({
 
   if (!appointment) {
     return (
-      <div className="flex h-screen max-h-screen px-[5%]">
+      <div className="flex h-screen max-h-screen px-[5%] place-items-center">
         <div className="text-center text-white">
-          <h2 className="header mb-6 max-w-[600px]">Appointment not found</h2>
-          <p>Please check the appointment details or try again later.</p>
+          <h2 className="header mb-6 max-w-[600px]">Termín nenalezen</h2>
+          <p>
+            Prosím zkontrolujte informace detailu nebo zkuste znovu později.{" "}
+          </p>
           <Button variant="outline" className="shad-primary-btn" asChild>
             <Link href={`/patients/${userId}/new-appointment`}>
               Nový termín
