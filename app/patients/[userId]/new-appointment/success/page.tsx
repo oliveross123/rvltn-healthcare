@@ -13,9 +13,27 @@ const Success = async ({
   const appointmentId = (searchParams?.appointmentId as string) || "";
   const appointment = await getAppointment(appointmentId);
 
-  //Example of fetching a photo
+  if (!appointment) {
+    return (
+      <div className="flex h-screen max-h-screen px-[5%] place-items-center">
+        <div className="text-center text-white">
+          <h2 className="header mb-6 max-w-[600px]">Termín nenalezen</h2>
+          <p>
+            Prosím zkontrolujte informace detailu nebo zkuste znovu později.{" "}
+          </p>
+          <Button variant="outline" className="shad-primary-btn" asChild>
+            <Link href={`/patients/${userId}/new-appointment`}>
+              Nový termín
+            </Link>
+          </Button>
+        </div>
+      </div>
+    );
+  }
+
+  // Fetching the doctor's photo and details
   const doctor = Doctors.find(
-    (doc) => doc.name === appointment.primaryPhysician
+    (doctor) => doctor.name === appointment.primaryPhysician
   );
 
   return (
@@ -39,8 +57,8 @@ const Success = async ({
             alt="success"
           />
           <h2 className="header mb-6 max-w-[600px] text-center">
-            Vaše <span className="text-green-500"> rezervace termínu </span>{" "}
-            byla úspěšně vytvořena 🎉
+            Vaše <span className="text-green-500">rezervace termínu</span> byla
+            úspěšně vytvořena 🎉
           </h2>
 
           <p>Brzy se vám ozveme s potvrzovací zprávou.</p>
@@ -49,14 +67,18 @@ const Success = async ({
         <section className="request-details text-white">
           <p>Detaily schůzky:</p>
           <div className="flex items-center gap-3">
-            <Image
-              src={doctor?.image}
-              alt="doctor"
-              width={100}
-              height={100}
-              className="size-6"
-            />
-            <p className="whitespace-nowrap">Dr. {doctor?.name}</p>
+            {doctor?.image ? (
+              <Image
+                src={doctor.image}
+                alt="doctor"
+                width={100}
+                height={100}
+                className="size-6"
+              />
+            ) : (
+              <p>Doctor's photo not available</p>
+            )}
+            <p className="whitespace-nowrap">Dr. {doctor?.name || "Unknown"}</p>
           </div>
           <div className="flex gap-2">
             <Image
