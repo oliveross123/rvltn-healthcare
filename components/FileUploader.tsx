@@ -11,21 +11,25 @@ type FileUploaderProps = {
 };
 
 const FileUploader = ({ files, onChange }: FileUploaderProps) => {
-  const onDrop = useCallback((acceptedFiles: File[]) => {
-    onChange(acceptedFiles);
-  }, []);
+  const onDrop = useCallback(
+    (acceptedFiles: File[]) => {
+      onChange(acceptedFiles);
+    },
+    [onChange] // Přidání onChange jako závislosti
+  );
+
   const { getRootProps, getInputProps, isDragActive } = useDropzone({ onDrop });
 
   return (
     <div {...getRootProps()} className="file-upload">
       <input {...getInputProps()} />
-      {files && files?.length > 0 ? (
+      {files && files.length > 0 ? (
         <Image
           src={convertFileToUrl(files[0])}
           width={1000}
           height={1000}
           alt="uploaded image"
-          className="max-h-[400px]  overflow-hidden object-cover"
+          className="max-h-[400px] overflow-hidden object-cover"
         />
       ) : (
         <>
@@ -47,7 +51,8 @@ const FileUploader = ({ files, onChange }: FileUploaderProps) => {
         </>
       )}
 
-      {isDragActive ? <p></p> : <p></p>}
+      {/* Tady byl zbytečný kód, protože prázdné <p> nemají žádný účel */}
+      {isDragActive && <p>Přetáhněte sem soubory...</p>}
     </div>
   );
 };

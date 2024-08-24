@@ -76,7 +76,7 @@ const Success = async ({
                 className="size-6"
               />
             ) : (
-              <p>Doctor's photo not available</p>
+              <p>Fotka doktora není k dispozici</p>
             )}
             <p className="whitespace-nowrap">Dr. {doctor?.name || "Unknown"}</p>
           </div>
