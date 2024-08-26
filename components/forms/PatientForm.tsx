@@ -75,16 +75,16 @@ const PatientForm = () => {
           className="space-y-6 flex-1"
         >
           <section className="mb-12 space-y-4">
-            <h1 className="header">Hi there 👋</h1>
-            <p className="text-dark-700">Schedule your first appointment</p>
+            <h1 className="header">Vítejte 👋</h1>
+            <p className="text-dark-700">Naplánujte si svůj termín</p>
           </section>
 
           <CustomFormField
             fieldType={FormFieldType.INPUT}
             control={form.control}
             name="name"
-            label="Full name"
-            placeholder="John Doe"
+            label="Vaše celé jméno"
+            placeholder="Marek Novák"
             iconSrc="/assets/icons/user.svg"
             iconAlt="User"
           />
@@ -93,8 +93,8 @@ const PatientForm = () => {
             fieldType={FormFieldType.INPUT}
             control={form.control}
             name="email"
-            label="Email"
-            placeholder="johndoe@email.com"
+            label="E-mail"
+            placeholder="mnovak@email.cz"
             iconSrc="/assets/icons/email.svg"
             iconAlt="email icon"
           />
@@ -103,13 +103,13 @@ const PatientForm = () => {
             fieldType={FormFieldType.PHONE_INPUT}
             control={form.control}
             name="phone"
-            label="Phone number"
+            label="Telefoní číslo"
             placeholder="+420 123 456 789"
             iconSrc="/assets/icons/phone.svg"
             iconAlt="phone icon"
           />
 
-          <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+          <SubmitButton isLoading={isLoading}>Pokračovat</SubmitButton>
         </form>
       </Form>
     </div>
