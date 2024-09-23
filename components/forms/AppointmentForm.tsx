@@ -18,16 +18,24 @@ import { Doctors } from "@/constants";
 import { SelectItem } from "../ui/select";
 import Image from "next/image";
 import React from "react";
-import { createAppointment } from "@/lib/actions/appointment.actions";
+import {
+  createAppointment,
+  updateAppointment,
+} from "@/lib/actions/appointment.actions";
+import { Appointment } from "@/types/appwrite.types";
 
 const AppointmentForm = ({
   userId,
   patientId,
   type,
+  appointment,
+  setOpen,
 }: {
   userId: string;
   patientId: string;
-  type: "vytvořit" | "zrušit" | "naplánovat";
+  type: "create" | "cancel" | "schedule";
+  appointment?: Appointment;
+  setOpen: (open: boolean) => void;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
@@ -38,11 +46,13 @@ const AppointmentForm = ({
   const form = useForm<z.infer<typeof AppointmentFormValidation>>({
     resolver: zodResolver(AppointmentFormValidation),
     defaultValues: {
-      primaryPhysician: "",
-      schedule: new Date(),
-      reason: "",
-      note: "",
-      cancellationReason: "",
+      primaryPhysician: appointment ? appointment.primaryPhysician : "",
+      schedule: appointment
+        ? new Date(appointment?.schedule)
+        : new Date(Date.now()),
+      reason: appointment ? appointment.reason : "",
+      note: appointment?.note || "",
+      cancellationReason: appointment?.cancellationReason || "",
     },
   });
 
@@ -52,10 +62,10 @@ const AppointmentForm = ({
 
     let status;
     switch (type) {
-      case "naplánovat":
+      case "schedule":
         status = "scheduled";
         break;
-      case "zrušit":
+      case "cancel":
         status = "cancelled";
         break;
       default:
@@ -64,9 +74,7 @@ const AppointmentForm = ({
     }
 
     try {
-      if (type === "vytvořit" && patientId) {
-        console.log("I AM HERE");
-
+      if (type === "create" && patientId) {
         const appointmentData = {
           userId,
           patient: patientId,
@@ -88,6 +96,25 @@ const AppointmentForm = ({
             `/patients/${userId}/new-appointment/success?appointmentId=${appointment.$id}`
           );
         }
+      } else {
+        const appointmentToUpdate = {
+          userId,
+          appointmentId: appointment?.$id!,
+          appointment: {
+            primaryPhysician: values?.primaryPhysician,
+            schedule: new Date(values?.schedule),
+            status: status as Status,
+            cancellationReason: values?.cancellationReason,
+          },
+          type,
+        };
+
+        const updatedAppointment = await updateAppointment(appointmentToUpdate);
+
+        if (updatedAppointment) {
+          setOpen && setOpen(false);
+          form.reset();
+        }
       }
     } catch (error) {
       console.error(error);
@@ -99,13 +126,13 @@ const AppointmentForm = ({
   let buttonLabel = "Get Started";
 
   switch (type) {
-    case "zrušit":
+    case "cancel":
       buttonLabel = "Zrušit termín";
       break;
-    case "vytvořit":
+    case "create":
       buttonLabel = "Vytvořit termín";
       break;
-    case "naplánovat":
+    case "schedule":
       buttonLabel = "Naplánovat termín";
       break;
     default:
@@ -120,14 +147,16 @@ const AppointmentForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6 flex-1"
         >
-          <section className="mb-12 space-y-4">
-            <h1 className="header">Nový termín</h1>
-            <p className="text-dark-700">
-              Domluvte si nový termín během několika sekund
-            </p>
-          </section>
+          {type === "create" && (
+            <section className="mb-12 space-y-4">
+              <h1 className="header">Nový termín</h1>
+              <p className="text-dark-700">
+                Domluvte si nový termín během několika sekund
+              </p>
+            </section>
+          )}
 
-          {type !== "zrušit" && (
+          {type !== "cancel" && (
             <>
               <CustomFormField
                 fieldType={FormFieldType.SELECT}
@@ -182,7 +211,7 @@ const AppointmentForm = ({
             </>
           )}
 
-          {type === "zrušit" && (
+          {type === "cancel" && (
             <CustomFormField
               fieldType={FormFieldType.TEXTAREA}
               control={form.control}
@@ -195,7 +224,7 @@ const AppointmentForm = ({
           <SubmitButton
             isLoading={isLoading}
             className={`${
-              type === "zrušit" ? "shad-danger-btn" : "shad-primary-btn"
+              type === "cancel" ? "shad-danger-btn" : "shad-primary-btn"
             } w-full`}
           >
             {buttonLabel}
