@@ -28,7 +28,8 @@ export default function Home({ searchParams }: SearchParamProps) {
               {" "}
               © 2024 HealthCare by rvltn
             </p>{" "}
-            <Link href="/?admin=true" className="text-green-500">
+            {/* Link href="/?admin=true" */}
+            <Link href="/admin" className="text-green-500">
               Admin
             </Link>
           </div>

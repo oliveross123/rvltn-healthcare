@@ -7,8 +7,9 @@ import {
   DATABASE_ID,
   databases,
   ENDPOINT,
+  messaging,
 } from "../appwrite.config";
-import { parseStringify } from "../utils";
+import { formatDateTime, parseStringify } from "../utils";
 import { Appointment } from "@/types/appwrite.types";
 import { revalidatePath } from "next/cache";
 
@@ -101,11 +102,35 @@ export const updateAppointment = async ({
       throw new Error("Appointment not found");
     }
 
-    //SMS notification
+    const smsMessage = `
+    Hi, its Healthcare.
+  ${
+    type === "schedule"
+      ? `your appointment has been scheduled for ${
+          formatDateTime(appointment.schedule!).dateTime
+        } with Dr. ${appointment.primaryPhysician}`
+      : `your appointment has been cancelled. Reason: ${appointment.cancellationReason}`
+  }`;
+
+    await sendSMSNotification(userId, smsMessage);
 
     revalidatePath("/admin");
     return parseStringify(updatedAppointment);
   } catch (error) {
     console.log(error);
+  }
+};
+
+export const sendSMSNotification = async (userId: string, content: string) => {
+  try {
+    const message = await messaging.createSms(
+      ID.unique(),
+      content,
+      [],
+      [userId]
+    );
+    return parseStringify(message);
+  } catch (error) {
+    console.log("An error ocurred while sending sms", error);
   }
 };
