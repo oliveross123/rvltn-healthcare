@@ -5,7 +5,7 @@ import Link from "next/link";
 import PasskeyModal from "@/components/PasskeyModal";
 
 export default function Home({ searchParams }: SearchParamProps) {
-  const isAdmin = searchParams.admin === "true";
+  const isAdmin = searchParams?.admin === "true";
 
   return (
     <div className="flex h-screen max-h-screen">
@@ -28,7 +28,8 @@ export default function Home({ searchParams }: SearchParamProps) {
               {" "}
               © 2024 HealthCare by rvltn
             </p>{" "}
-            <Link href="/?admin=true" className="text-green-500">
+            {/* Link href="/?admin=true" */}
+            <Link href="/admin" className="text-green-500">
               Admin
             </Link>
           </div>
