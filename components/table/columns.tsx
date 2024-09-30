@@ -19,7 +19,7 @@ export const columns: ColumnDef<Appointment>[] = [
   },
   {
     accessorKey: "patient",
-    header: "Patient",
+    header: "Pacient",
     cell: ({ row }) => {
       const appointment = row.original;
       return <p className="text-14-medium ">{appointment.patient.name}</p>;
@@ -39,7 +39,7 @@ export const columns: ColumnDef<Appointment>[] = [
   },
   {
     accessorKey: "schedule",
-    header: "Appointment",
+    header: "Termín",
     cell: ({ row }) => {
       const appointment = row.original;
       return (
@@ -51,7 +51,7 @@ export const columns: ColumnDef<Appointment>[] = [
   },
   {
     accessorKey: "primaryPhysician",
-    header: "Doctor",
+    header: "Lékař",
     cell: ({ row }) => {
       const appointment = row.original;
 
@@ -75,7 +75,7 @@ export const columns: ColumnDef<Appointment>[] = [
   },
   {
     id: "actions",
-    header: () => <div className="pl-4">Actions</div>,
+    header: () => <div className="pl-4">Akce</div>,
     cell: ({ row }) => {
       const appointment = row.original;
 
@@ -85,13 +85,13 @@ export const columns: ColumnDef<Appointment>[] = [
             patientId={appointment.patient.$id}
             userId={appointment.userId}
             appointment={appointment}
-            type="schedule"
+            type="naplánovat"
           />
           <AppointmentModal
             patientId={appointment.patient.$id}
             userId={appointment.userId}
             appointment={appointment}
-            type="cancel"
+            type="zrušit"
           />
         </div>
       );

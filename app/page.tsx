@@ -1,10 +1,9 @@
 import Image from "next/image";
-import { Button } from "@/components/ui/button";
 import PatientForm from "@/components/forms/PatientForm";
 import Link from "next/link";
 import PasskeyModal from "@/components/PasskeyModal";
 
-export default function Home({ searchParams }: SearchParamProps) {
+const Home = ({ searchParams }: SearchParamProps) => {
   const isAdmin = searchParams?.admin === "true";
 
   return (
@@ -29,8 +28,8 @@ export default function Home({ searchParams }: SearchParamProps) {
               © 2024 HealthCare by rvltn
             </p>{" "}
             {/* Link href="/?admin=true" */}
-            <Link href="/admin" className="text-green-500">
-              Admin
+            <Link href="/?admin=true" className="text-green-500">
+              Admin <span className="text-white"> 123456</span>
             </Link>
           </div>
         </div>
@@ -45,4 +44,6 @@ export default function Home({ searchParams }: SearchParamProps) {
       />
     </div>
   );
-}
+};
+
+export default Home;
