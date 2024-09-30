@@ -26,7 +26,7 @@ export const AppointmentModal = ({
   patientId: string;
   userId: string;
   appointment?: Appointment;
-  type: "schedule" | "cancel";
+  type: "naplánovat" | "cancel";
   title: string;
   description: string;
 }) => {
@@ -37,7 +37,7 @@ export const AppointmentModal = ({
       <DialogTrigger asChild>
         <Button
           variant="ghost"
-          className={`capitalize ${type === "schedule" && "text-green-500"}`}
+          className={`capitalize ${type === "naplánovat" && "text-green-500"}`}
         >
           {type}
         </Button>
