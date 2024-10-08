@@ -47,13 +47,25 @@ const Success = async ({
     <div className="flex h-screen max-h-screen px-[5%]">
       <div className="success-img">
         <Link href="/">
-          <Image
+          <div className="sub-container max-w-[860px] flex-1 justify-between">
+            <div className="sub-container max-w-[496px]">
+              {/* <Image
             src="/assets/icons/logo-full.svg"
             height={1000}
             width={1000}
-            alt="logo"
-            className="h-10 w-fit"
-          />
+            alt="patient"
+            className="mb-12 h-10 w-fit"
+          /> */}
+              <div className="-mt-10 max-w-[120ox]">
+                <Link
+                  href={"/"}
+                  className="-mt-10 text-lg md:text-2xl font-semibold bg-gradient-to-br from-green-500 via-green-500 to-dark-500"
+                >
+                  rvltnCare
+                </Link>
+              </div>
+            </div>
+          </div>
         </Link>
 
         <section className="text-white flex flex-col items-center">
@@ -103,7 +115,7 @@ const Success = async ({
           <Link href={`/patients/${userId}/new-appointment`}>Nový termín</Link>
         </Button>
 
-        <p className="copyright">© 2024 HealthCare by rvltn </p>
+        <p className="copyright">© 2024 rvltn.cz | rvltnCare </p>
       </div>
     </div>
   );

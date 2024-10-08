@@ -6,7 +6,7 @@ import { z } from "zod";
 import { Form } from "@/components/ui/form";
 import CustomFormField from "../CustomFormField";
 import SubmitButton from "../SubmitButton";
-import { useState } from "react";
+import { useState, Dispatch, SetStateAction } from "react";
 import {
   CreateAppointmentSchema,
   getAppointmentSchema,
@@ -24,18 +24,18 @@ import {
 } from "@/lib/actions/appointment.actions";
 import { Appointment } from "@/types/appwrite.types";
 
-const AppointmentForm = ({
+export const AppointmentForm = ({
   userId,
   patientId,
-  type,
+  type = "create",
   appointment,
   setOpen,
 }: {
   userId: string;
   patientId: string;
-  type: "create" | "cancel" | "schedule";
+  type: "create" | "schedule" | "cancel";
   appointment?: Appointment;
-  setOpen: (open: boolean) => void;
+  setOpen?: Dispatch<SetStateAction<boolean>>;
 }) => {
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(false);
