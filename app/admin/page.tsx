@@ -1,26 +1,44 @@
-import React from "react";
+"use client";
+
+import React, { useEffect, useState } from "react";
 import Link from "next/link";
-import Image from "next/image";
 import StatCard from "@/components/StatCard";
 import { getRecentAppointmentList } from "@/lib/actions/appointment.actions";
 import { DataTable } from "@/components/table/DataTable";
 import { columns } from "@/components/table/columns";
 
-const Admin = async () => {
-  const appointments = await getRecentAppointmentList();
+const Admin = () => {
+  const [appointments, setAppointments] = useState({
+    scheduledCount: 0,
+    pendingCount: 0,
+    cancelledCount: 0,
+    documents: [],
+  });
+
+  // Fetch appointments and set them to state
+  const fetchAppointments = async () => {
+    const fetchedAppointments = await getRecentAppointmentList();
+    setAppointments(fetchedAppointments);
+  };
+
+  // Use useEffect to fetch appointments every 10 minutes
+  useEffect(() => {
+    // Fetch the appointments initially
+    fetchAppointments();
+
+    // Set an interval to update appointments every 10 minutes (600,000 ms)
+    const intervalId = setInterval(() => {
+      fetchAppointments();
+    }, 600000); // 600,000 ms = 10 minutes
+
+    // Clean up the interval when the component is unmounted
+    return () => clearInterval(intervalId);
+  }, []); // Empty dependency array ensures it runs once after mount
 
   return (
     <div className="mx-auto flex max-w-7xl flex-col space-y-14">
       <header className="admin-header">
         <Link href="/" className="cursor-pointer">
-          {/* <Image
-            src="/assets/icons/logo-full.svg"
-            height={32}
-            width={162}
-            alt="Logo"
-            className="h-8 w-fit"
-          /> */}
-
           <Link
             href={"/"}
             className="-mt-10 text-lg md:text-2xl font-semibold bg-gradient-to-br from-green-500 via-green-500 to-dark-500"
