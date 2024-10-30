@@ -6,7 +6,6 @@ import {
   FormItem,
   FormLabel,
   FormControl,
-  FormDescription,
   FormMessage,
 } from "./ui/form";
 import { Input } from "@/components/ui/input";
@@ -22,6 +21,8 @@ import "react-datepicker/dist/react-datepicker.css";
 import { Select, SelectContent, SelectTrigger, SelectValue } from "./ui/select";
 import { Textarea } from "./ui/textarea";
 import { Checkbox } from "./ui/checkbox";
+
+import { isWorkday, filterWorkdayHours, isFutureDate } from "@/lib/utils";
 
 interface CustomProps {
   control: Control<any>;
@@ -48,6 +49,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
     dateFormat,
     renderSkeleton,
   } = props;
+
   switch (fieldType) {
     case FormFieldType.INPUT:
       return (
@@ -61,7 +63,6 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
               className="ml-2"
             />
           )}
-
           <FormControl>
             <Input
               placeholder={placeholder}
@@ -83,6 +84,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
           />
         </FormControl>
       );
+
     case FormFieldType.PHONE_INPUT:
       return (
         <FormControl>
@@ -100,7 +102,7 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
 
     case FormFieldType.DATE_PICKER:
       return (
-        <div className="flex rounded-md borded border-dark-500 bg-dark-400 ">
+        <div className="flex rounded-md border border-dark-500 bg-dark-400">
           <Image
             src="/assets/icons/calendar.svg"
             height={24}
@@ -113,8 +115,13 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
               selected={field.value}
               onChange={(date) => field.onChange(date)}
               dateFormat={dateFormat ?? "dd/MM/yyyy"}
-              showTimeSelect={showTimeSelect ?? false}
-              timeInputLabel="Time:"
+              filterDate={(date) => isWorkday(date) && isFutureDate(date)} // Disable weekends and past dates
+              filterTime={filterWorkdayHours} // Restrict hours to 8:00 - 15:30
+              showTimeSelect={showTimeSelect ?? true}
+              timeCaption="Čas"
+              timeIntervals={30} // 30-minute intervals
+              timeFormat="HH:mm"
+              placeholderText="Vyberte datum a čas"
               wrapperClassName="date-picker"
             />
           </FormControl>
@@ -155,8 +162,9 @@ const RenderInput = ({ field, props }: { field: any; props: CustomProps }) => {
           </div>
         </FormControl>
       );
+
     default:
-      break;
+      return null;
   }
 };
 
@@ -171,9 +179,7 @@ const CustomFormField = (props: CustomProps) => {
           {fieldType !== FormFieldType.CHECKBOX && label && (
             <FormLabel>{label}</FormLabel>
           )}
-
           <RenderInput field={field} props={props} />
-
           <FormMessage className="shad-error" />
         </FormItem>
       )}

@@ -12,51 +12,50 @@ export const convertFileToUrl = (file: File) => URL.createObjectURL(file);
 // FORMAT DATE TIME
 export const formatDateTime = (dateString: Date | string) => {
   const dateTimeOptions: Intl.DateTimeFormatOptions = {
-    // weekday: "short", // abbreviated weekday name (e.g., 'Mon')
-    month: "short", // abbreviated month name (e.g., 'Oct')
-    day: "numeric", // numeric day of the month (e.g., '25')
-    year: "numeric", // numeric year (e.g., '2023')
-    hour: "numeric", // numeric hour (e.g., '8')
-    minute: "numeric", // numeric minute (e.g., '30')
-    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
+    day: "numeric",
+    month: "2-digit",
+    year: "numeric",
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false,
   };
 
   const dateDayOptions: Intl.DateTimeFormatOptions = {
-    weekday: "short", // abbreviated weekday name (e.g., 'Mon')
-    year: "numeric", // numeric year (e.g., '2023')
-    month: "2-digit", // abbreviated month name (e.g., 'Oct')
-    day: "2-digit", // numeric day of the month (e.g., '25')
+    weekday: "short",
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
   };
 
   const dateOptions: Intl.DateTimeFormatOptions = {
-    month: "short", // abbreviated month name (e.g., 'Oct')
-    year: "numeric", // numeric year (e.g., '2023')
-    day: "numeric", // numeric day of the month (e.g., '25')
+    day: "2-digit",
+    month: "2-digit",
+    year: "numeric",
   };
 
   const timeOptions: Intl.DateTimeFormatOptions = {
-    hour: "numeric", // numeric hour (e.g., '8')
-    minute: "numeric", // numeric minute (e.g., '30')
-    hour12: true, // use 12-hour clock (true) or 24-hour clock (false)
+    hour: "numeric",
+    minute: "numeric",
+    hour12: false,
   };
 
   const formattedDateTime: string = new Date(dateString).toLocaleString(
-    "en-US",
+    "cs-CZ",
     dateTimeOptions
   );
 
   const formattedDateDay: string = new Date(dateString).toLocaleString(
-    "en-US",
+    "cs-CZ",
     dateDayOptions
   );
 
   const formattedDate: string = new Date(dateString).toLocaleString(
-    "en-US",
+    "cs-CZ",
     dateOptions
   );
 
   const formattedTime: string = new Date(dateString).toLocaleString(
-    "en-US",
+    "cs-CZ",
     timeOptions
   );
 
@@ -66,6 +65,26 @@ export const formatDateTime = (dateString: Date | string) => {
     dateOnly: formattedDate,
     timeOnly: formattedTime,
   };
+};
+
+// Restrict to weekdays (Monday to Friday)
+export const isWorkday = (date: Date) => {
+  const day = date.getDay();
+  return day >= 1 && day <= 5; // Only Monday to Friday
+};
+
+// Disable past dates
+export const isFutureDate = (date: Date) => {
+  const today = new Date();
+  today.setHours(0, 0, 0, 0); // Reset time for accurate date comparison
+  return date >= today; // Only allow today and future dates
+};
+
+// Restrict hours to 8:00 - 15:30
+export const filterWorkdayHours = (time: Date) => {
+  const hour = time.getHours();
+  const minute = time.getMinutes();
+  return (hour >= 8 && hour < 15) || (hour === 15 && minute <= 30);
 };
 
 export function encryptKey(passkey: string) {

@@ -15,7 +15,7 @@ const Register = async ({ params: { userId } }: SearchParamProps) => {
     <div className="flex h-screen max-h-screen">
       {/* TODO: OTP VERIFICATION \ PASSKEY MODEL */}
       <section className="remove-scrollbar container">
-        <div className="sub-container max-w-[496px]">
+        <div className="sub-container max-w-[860px] flex-1 flex-col py-10">
           {/* <Image
             src="/assets/icons/logo-full.svg"
             height={1000}
@@ -23,16 +23,14 @@ const Register = async ({ params: { userId } }: SearchParamProps) => {
             alt="patient"
             className="mb-12 h-10 w-fit"
           /> */}
-          <div className="-mt-10 max-w-[120ox]">
-            <Link
-              href={"/"}
-              className="-mt-10 text-lg md:text-2xl font-semibold bg-gradient-to-br from-green-500 via-green-500 to-dark-500"
-            >
-              rvltnCare
-            </Link>
-          </div>
+          <Link
+            href={"/"}
+            className="-mt-10 text-lg md:text-2xl font-semibold bg-gradient-to-br from-green-500 via-green-500 to-dark-500 w-fit"
+          >
+            rvltnCare
+          </Link>
           <RegisterForm user={user} />
-          <p className="copyright py-12"> © 2024 rvltn.cz | rvltnCare</p>{" "}
+          <p className="copyright py-12"> © 2024 rvltnCare | rvltn.cz</p>{" "}
         </div>
       </section>
 

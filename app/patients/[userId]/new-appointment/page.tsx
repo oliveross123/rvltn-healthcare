@@ -1,10 +1,10 @@
 import Image from "next/image";
-import Link from "next/link";
 
 import AppointmentForm from "@/components/forms/AppointmentForm";
 import { getPatient } from "@/lib/actions/patient.actions";
 
 import * as Sentry from "@sentry/nextjs";
+import Link from "next/link";
 
 const Appointment = async ({ params: { userId } }: SearchParamProps) => {
   const patient = await getPatient(userId);
@@ -15,31 +15,27 @@ const Appointment = async ({ params: { userId } }: SearchParamProps) => {
     <div className="flex h-screen max-h-screen">
       <section className="remove-scrollbar container my-auto">
         <div className="sub-container max-w-[860px] flex-1 justify-between">
-          <div className="sub-container max-w-[496px]">
-            {/* <Image
+          {/* <Image
             src="/assets/icons/logo-full.svg"
             height={1000}
             width={1000}
-            alt="patient"
+            alt="logo"
             className="mb-12 h-10 w-fit"
           /> */}
-            <div className="-mt-10 max-w-[120ox]">
-              <Link
-                href={"/"}
-                className="-mt-10 text-lg md:text-2xl font-semibold bg-gradient-to-br from-green-500 via-green-500 to-dark-500"
-              >
-                rvltnCare
-              </Link>
-            </div>
-          </div>
+          <Link
+            href={"/"}
+            className="-mt-10 text-lg md:text-2xl font-semibold bg-gradient-to-br from-green-500 via-green-500 to-dark-500 w-fit"
+          >
+            rvltnCare
+          </Link>
 
           <AppointmentForm
             patientId={patient?.$id}
             userId={userId}
-            type="create"
+            type="nevyřízene"
           />
 
-          <p className="copyright mt-10 py-12">© 2024 rvltn.cz | rvltnCare </p>
+          <p className="copyright mt-10 py-12">© 2024 rvltnCare | rvltn.cz</p>
         </div>
       </section>
 
