@@ -75,7 +75,7 @@ export default async function DashboardLayout({
             </Link>
           </div>
           <div className="flex-1">
-            <nav className="grid items-start px-2 font-medium lg:px-4">
+            <nav className="cursor-pointer grid items-start px-2 font-medium lg:px-4">
               {navLinks.map((link) => (
                 <Link key={link.name} href={link.href}>
                   <div className="flex items-center gap-2 my-2">
