@@ -131,7 +131,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             fieldType={FormFieldType.INPUT}
             control={form.control}
             name="name"
-            label="Full name"
+            label="Celé jméno"
             placeholder="Jan Novák"
             iconSrc="/assets/icons/user.svg"
             iconAlt="User"
@@ -142,7 +142,7 @@ const RegisterForm = ({ user }: { user: User }) => {
               fieldType={FormFieldType.INPUT}
               control={form.control}
               name="email"
-              label="Email"
+              label="E-mail"
               placeholder="jnovak@email.cz"
               iconSrc="/assets/icons/email.svg"
               iconAlt="email icon"
@@ -152,7 +152,7 @@ const RegisterForm = ({ user }: { user: User }) => {
               fieldType={FormFieldType.PHONE_INPUT}
               control={form.control}
               name="phone"
-              label="Phone number"
+              label="Telefoní číslo"
               placeholder="+420 123 456 789"
               iconSrc="/assets/icons/phone.svg"
               iconAlt="phone icon"
@@ -164,7 +164,7 @@ const RegisterForm = ({ user }: { user: User }) => {
               fieldType={FormFieldType.DATE_PICKER}
               control={form.control}
               name="birthDate"
-              label="Date of birth"
+              label="Datum narození"
               placeholder="01.01.1990"
               iconSrc="/assets/icons/calendar.svg"
               iconAlt="calendar icon"
@@ -174,7 +174,7 @@ const RegisterForm = ({ user }: { user: User }) => {
               fieldType={FormFieldType.SKELETON}
               control={form.control}
               name="gender"
-              label="Gender"
+              label="Pohlaví"
               renderSkeleton={(field) => (
                 <FormControl>
                   <RadioGroup
@@ -384,7 +384,7 @@ const RegisterForm = ({ user }: { user: User }) => {
             label="Souhlasím s ochranou osobních údajů"
           />
 
-          <SubmitButton isLoading={isLoading}>Get Started</SubmitButton>
+          <SubmitButton isLoading={isLoading}>Pokračovat</SubmitButton>
         </form>
       </Form>
     </div>

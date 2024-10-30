@@ -1,0 +1,153 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider          = "postgresql"
+  url               = env("DATABASE_URL")
+  directUrl         = env("DIRECT_URL")
+}
+
+model Clinic {
+  id              String    @id @default(uuid())
+  email           String
+  emailVerified   Boolean   @default(false)
+  name            String
+  address         String
+  profileImage    String?
+  phoneNumber     String?
+  billingInfo     BillingInfo? // Fakturační informace
+  subscription    Subscription? // Předplatné pro sledování plateb
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+
+  sites           Site[]
+  posts           Post[]
+  appointments    Appointment[]
+  doctors         Doctor[]
+  patients        Patient[]
+}
+
+model BillingInfo {
+  id              String    @id @default(uuid())
+  clinicId        String    @unique
+  clinic          Clinic    @relation(fields: [clinicId], references: [id])
+  cardNumber      String
+  expirationDate  DateTime
+  cvv             String
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Subscription {
+  id              String    @id @default(uuid())
+  clinicId        String    @unique
+  clinic          Clinic    @relation(fields: [clinicId], references: [id])
+  plan            String    // Typ plánu (např. Basic, Premium)
+  status          SubscriptionStatus
+  startDate       DateTime
+  endDate         DateTime?
+  nextBillingDate DateTime?
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model Site {
+  id            String    @id @default(uuid())
+  name          String
+  description   String
+  subdirectory  String    @unique
+  createdAt     DateTime  @default(now())
+  updatedAt     DateTime  @updatedAt
+  imageUrl      String?
+  clinicId      String
+  clinic        Clinic    @relation(fields: [clinicId], references: [id])
+  posts         Post[]
+}
+
+model Post {
+  id             String    @id @default(uuid())
+  title          String
+  articleContent Json
+  smallDescription String
+  image          String
+  slug           String    @unique
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  clinicId       String
+  clinic         Clinic    @relation(fields: [clinicId], references: [id])
+  siteId         String?
+  site           Site?     @relation(fields: [siteId], references: [id], onDelete: Cascade)
+}
+
+model Doctor {
+  id           String   @id @default(uuid())
+  name         String
+  profileImage String?
+  clinicId     String
+  clinic       Clinic   @relation(fields: [clinicId], references: [id])
+  appointments Appointment[] @relation("DoctorAppointments")
+}
+
+model Appointment {
+  id                 String         @id @default(uuid())
+  clientName         String
+  clientEmail        String
+  date               DateTime
+  reason             String?        
+  note               String?        
+  cancellationReason String?      
+  status             AppointmentStatus
+  clinicId           String
+  clinic             Clinic         @relation(fields: [clinicId], references: [id])
+  doctorId           String?
+  doctor             Doctor?        @relation("DoctorAppointments", fields: [doctorId], references: [id])
+  patientId          String
+  patient            Patient        @relation(fields: [patientId], references: [id])
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+
+  @@index([doctorId], name: "doctorId_idx")
+}
+
+model Patient {
+  id                 String    @id @default(uuid())
+  firstName          String
+  lastName           String
+  email              String
+  phone              String
+  birthDate          DateTime
+  petName            String
+  petSpecies         String
+  petBreed           String
+  petBirthDate       DateTime
+  petGender          String
+  petWeight          Float
+  petColor           String
+  petMicrochip       String?
+  petNeutered        Boolean
+  petVaccinated      Boolean
+  petVaccineDate     DateTime?
+  petAllergies       String?
+  petMedications     String?
+  petConditions      String?
+  petDiet            String?
+  clinicId           String
+  clinic             Clinic   @relation(fields: [clinicId], references: [id])
+  appointments       Appointment[]
+
+  createdAt          DateTime @default(now())
+  updatedAt          DateTime @updatedAt
+}
+
+enum AppointmentStatus {
+  SCHEDULED
+  PENDING
+  CANCELLED
+}
+
+enum SubscriptionStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+}

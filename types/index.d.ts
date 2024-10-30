@@ -6,7 +6,7 @@ declare type SearchParamProps = {
 };
 
 declare type Gender = "male" | "female" | "other";
-declare type Status = "pending" | "scheduled" | "cancelled";
+declare type Status = "nevyřízene" | "naplánovat" | "zrušit" | "vyřešeno";
 
 declare interface CreateUserParams {
   name: string;
@@ -53,4 +53,5 @@ declare type UpdateAppointmentParams = {
   userId: string;
   appointment: Appointment;
   type: string;
+  solvedNote?: string | undefined;
 };

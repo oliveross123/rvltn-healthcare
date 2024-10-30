@@ -33,7 +33,7 @@ const AppointmentForm = ({
 }: {
   userId: string;
   patientId: string;
-  type: "create" | "cancel" | "schedule";
+  type: "nevyřízene" | "zrušit" | "naplánovat" | "vyřešeno";
   appointment?: Appointment;
   setOpen: (open: boolean) => void;
 }) => {
@@ -62,19 +62,22 @@ const AppointmentForm = ({
 
     let status;
     switch (type) {
-      case "schedule":
-        status = "scheduled";
+      case "naplánovat":
+        status = "naplánovat";
         break;
-      case "cancel":
-        status = "cancelled";
+      case "vyřešeno":
+        status = "vyřešeno";
+        break;
+      case "zrušit":
+        status = "zrušit";
         break;
       default:
-        status = "pending";
+        status = "nevyřízene";
         break;
     }
 
     try {
-      if (type === "create" && patientId) {
+      if (type === "nevyřízene" && patientId) {
         const appointmentData = {
           userId,
           patient: patientId,
@@ -123,16 +126,19 @@ const AppointmentForm = ({
     setIsLoading(false);
   }
 
-  let buttonLabel = "Get Started";
+  let buttonLabel = "Nastavit termín";
 
   switch (type) {
-    case "cancel":
+    case "zrušit":
       buttonLabel = "Zrušit termín";
       break;
-    case "create":
+    case "vyřešeno":
+      buttonLabel = "Vyřešit termín";
+      break;
+    case "nevyřízene":
       buttonLabel = "Vytvořit termín";
       break;
-    case "schedule":
+    case "naplánovat":
       buttonLabel = "Naplánovat termín";
       break;
     default:
@@ -147,7 +153,7 @@ const AppointmentForm = ({
           onSubmit={form.handleSubmit(onSubmit)}
           className="space-y-6 flex-1"
         >
-          {type === "create" && (
+          {type === "nevyřízene" && (
             <section className="mb-12 space-y-4">
               <h1 className="header">Nový termín</h1>
               <p className="text-dark-700">
@@ -156,7 +162,7 @@ const AppointmentForm = ({
             </section>
           )}
 
-          {type !== "cancel" && (
+          {type !== "zrušit" && (
             <>
               <CustomFormField
                 fieldType={FormFieldType.SELECT}
@@ -185,7 +191,7 @@ const AppointmentForm = ({
                 fieldType={FormFieldType.DATE_PICKER}
                 control={form.control}
                 name="schedule"
-                label="Očekávaný termín"
+                label="Očekávaný termín       (PO-PÁ , 8:00 - 15:30)"
                 showTimeSelect
                 dateFormat="dd/MM/yyyy HH:mm" // 24-hour format without AM/PM NOTWORKING !!!
                 placeholder="Vyberte datum"
@@ -204,27 +210,37 @@ const AppointmentForm = ({
                   fieldType={FormFieldType.TEXTAREA}
                   control={form.control}
                   name="note"
-                  label="Poznámky"
+                  label="Poznámky klienta"
                   placeholder="Napište poznámky"
                 />
               </div>
             </>
           )}
 
-          {type === "cancel" && (
+          {type === "zrušit" && (
             <CustomFormField
               fieldType={FormFieldType.TEXTAREA}
               control={form.control}
               name="cancellationReason"
-              label="Důvod for cancellation"
+              label="Důvod pro zrušení"
               placeholder="Uveďte důvod pro zrušení"
+            />
+          )}
+
+          {type === "vyřešeno" && (
+            <CustomFormField
+              fieldType={FormFieldType.TEXTAREA}
+              control={form.control}
+              name="solvedNote"
+              label="Poznámky navštěvy - Doktor"
+              placeholder="Uveďte poznámky navštevy doktora"
             />
           )}
 
           <SubmitButton
             isLoading={isLoading}
             className={`${
-              type === "cancel" ? "shad-danger-btn" : "shad-primary-btn"
+              type === "zrušit" ? "shad-danger-btn" : "shad-primary-btn"
             } w-full`}
           >
             {buttonLabel}

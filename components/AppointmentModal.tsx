@@ -22,11 +22,13 @@ export const AppointmentModal = ({
   userId,
   appointment,
   type,
+  title, // Přidán title
+  description, // Přidán description
 }: {
   patientId: string;
   userId: string;
   appointment?: Appointment;
-  type: "naplánovat" | "cancel";
+  type: "naplánovat" | "zrušit" | "vyřešeno";
   title: string;
   description: string;
 }) => {
@@ -37,17 +39,19 @@ export const AppointmentModal = ({
       <DialogTrigger asChild>
         <Button
           variant="ghost"
-          className={`capitalize ${type === "naplánovat" && "text-green-500"}`}
+          className={`capitalize ${
+            type === "naplánovat" && "text-green-500"
+          } ? ${type === "zrušit" && "text-red-500"} : ${
+            type === "vyřešeno" && "text-white-500"
+          }`}
         >
           {type}
         </Button>
       </DialogTrigger>
       <DialogContent className="shad-dialog sm:max-w-md">
         <DialogHeader className="mb-4 space-y-3">
-          <DialogTitle className="capitalize">{type} Termín</DialogTitle>
-          <DialogDescription>
-            Prosím uvedte podrobné informace pro {type} termínu pro pacienta.
-          </DialogDescription>
+          <DialogTitle>{title}</DialogTitle>
+          <DialogDescription>{description}</DialogDescription>
         </DialogHeader>
 
         <AppointmentForm
