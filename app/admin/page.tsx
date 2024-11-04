@@ -49,7 +49,7 @@ const Admin = async () => {
           <StatCard
             type="nevyřízene"
             count={appointments.pendingCount}
-            label="Nevyřízene termíny"
+            label="Nevyřízené termíny"
             icon="/assets/icons/pending.svg"
           />
 
