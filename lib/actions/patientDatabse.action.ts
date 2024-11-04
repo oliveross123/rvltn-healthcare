@@ -3,7 +3,7 @@
 import { ID, Query } from "node-appwrite";
 import {
   APPOINTMENT_COLLECTION_ID,
-    PATIENT_COLLECTION_ID,
+  PATIENT_COLLECTION_ID,
   BUCKET_ID,
   DATABASE_ID,
   databases,
@@ -14,7 +14,7 @@ import { formatDateTime, parseStringify } from "../utils";
 import { Appointment } from "@/types/appwrite.types";
 import { revalidatePath } from "next/cache";
 import { getAppointmentsByClinicId } from "../appointments";
-import KindeAuth  from "@kinde-oss/kinde-auth-nextjs";
+import KindeAuth from "@kinde-oss/kinde-auth-nextjs";
 import { getUser } from "@kinde-oss/kinde-auth-nextjs";
 
 export const getAppointment = async (appointmentId: string) => {
@@ -65,7 +65,7 @@ export const updateAppointment = async ({
             type === "naplánovat"
               ? `Váš termín byl naplánovan na datum:  ${
                   formatDateTime(appointment.schedule!).dateTime
-                } with Dr. ${appointment.primaryPhysician}`
+                } with MVDr. ${appointment.primaryPhysician}`
               : `Váš termín byl zrušen - důvod: ${appointment.cancellationReason}`
           }`;
 
@@ -91,45 +91,45 @@ export const sendSMSNotification = async (userId: string, content: string) => {
   }
 };
 
-
 export const updatePatient = async (
-    userId: string, // Přidání userId argumentu zde
-    patientId: string,
-    patientData: Partial<{
-      name: string;
-      age: number;
-      phone: string;
-      notes: string;
-    }>
-  ) => {
-    try {
-      // Načtení uživatele s userId
-      const user = await getUser(userId);
-  
-      // Ověření oprávnění uživatele
-      if (!user || !user.permissions?.includes("edit_patient_data")) {
-        throw new Error("Unauthorized: You do not have permission to edit patient data.");
-      }
-  
-      const updatedPatient = await databases.updateDocument(
-        DATABASE_ID!,
-        PATIENT_COLLECTION_ID!,
-        patientId,
-        patientData
-      );
-  
-      if (!updatedPatient) {
-        throw new Error("Patient not found");
-      }
-  
-      // Použití user.id jako clinicId pro revalidaci cesty
-      const clinicId = user.id;
-      revalidatePath(`/dashboard/clinics/${clinicId}/patientDatabase`);
-  
-      return parseStringify(updatedPatient);
-    } catch (error) {
-      console.log("An error occurred while updating patient", error);
-      throw error;
-    }
-  };
+  userId: string, // Přidání userId argumentu zde
+  patientId: string,
+  patientData: Partial<{
+    name: string;
+    age: number;
+    phone: string;
+    notes: string;
+  }>
+) => {
+  try {
+    // Načtení uživatele s userId
+    const user = await getUser(userId);
 
+    // Ověření oprávnění uživatele
+    if (!user || !user.permissions?.includes("edit_patient_data")) {
+      throw new Error(
+        "Unauthorized: You do not have permission to edit patient data."
+      );
+    }
+
+    const updatedPatient = await databases.updateDocument(
+      DATABASE_ID!,
+      PATIENT_COLLECTION_ID!,
+      patientId,
+      patientData
+    );
+
+    if (!updatedPatient) {
+      throw new Error("Patient not found");
+    }
+
+    // Použití user.id jako clinicId pro revalidaci cesty
+    const clinicId = user.id;
+    revalidatePath(`/dashboard/clinics/${clinicId}/patientDatabase`);
+
+    return parseStringify(updatedPatient);
+  } catch (error) {
+    console.log("An error occurred while updating patient", error);
+    throw error;
+  }
+};

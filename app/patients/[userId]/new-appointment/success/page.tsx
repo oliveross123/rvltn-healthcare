@@ -82,7 +82,9 @@ const Success = async ({
             ) : (
               <p>Fotka doktora není k dispozici</p>
             )}
-            <p className="whitespace-nowrap">Dr. {doctor?.name || "Unknown"}</p>
+            <p className="whitespace-nowrap">
+              MVDr. {doctor?.name || "Unknown"}
+            </p>
           </div>
           <div className="flex gap-2">
             <Image

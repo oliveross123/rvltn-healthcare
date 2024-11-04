@@ -108,7 +108,7 @@ export const updateAppointment = async ({
     type === "naplánovat"
       ? `Váš termín byl naplánovan na datum:  ${
           formatDateTime(appointment.schedule!).dateTime
-        } with Dr. ${appointment.primaryPhysician}`
+        } with MVDr. ${appointment.primaryPhysician}`
       : `Váš termín byl zrušen - důvod: ${appointment.cancellationReason}`
   }`;
 
