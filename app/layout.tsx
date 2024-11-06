@@ -3,6 +3,7 @@ import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 import { ThemeProvider } from "@/components/theme-provider";
+import { Toaster } from "@/components/ui/sonner";
 
 import { cn } from "@/lib/utils";
 
@@ -15,7 +16,7 @@ const fontSans = Plus_Jakarta_Sans({
 });
 
 export const metadata: Metadata = {
-  title: "HealthCare by rvltn",
+  title: "rvltnCare.io - informační systém pro veterinární kliniky",
   description: "Management systém pro zdravotní péči",
 };
 
@@ -27,13 +28,11 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body
-        className={cn(
-          "min-h-screen bg-dark-300 font-sans antialiased",
-          fontSans.variable
-        )}
+        className={cn("min-h-screen font-sans antialiased", fontSans.variable)}
       >
-        <ThemeProvider attribute="class" defaultTheme="dark">
+        <ThemeProvider attribute="class" defaultTheme="system">
           {children}
+          <Toaster richColors closeButton />
         </ThemeProvider>
       </body>
     </html>

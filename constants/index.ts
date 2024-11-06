@@ -36,23 +36,23 @@ export const IdentificationTypes = [
 export const Doctors = [
   {
     image: "/assets/images/dr-green.png",
-    name: "John Green",
+    name: "Marek Novák",
   },
   {
     image: "/assets/images/dr-cameron.png",
-    name: "Leila Cameron",
+    name: "Gabriela Zelinková",
   },
   {
     image: "/assets/images/dr-livingston.png",
-    name: "David Livingston",
+    name: "David Šebesta",
   },
   {
     image: "/assets/images/dr-peter.png",
-    name: "Evan Peter",
+    name: "Ondřej Neplecha",
   },
   {
     image: "/assets/images/dr-powell.png",
-    name: "Jane Powell",
+    name: "Jana Švihlá",
   },
   {
     image: "/assets/images/dr-remirez.png",
@@ -73,7 +73,8 @@ export const Doctors = [
 ];
 
 export const StatusIcon = {
-  scheduled: "/assets/icons/check.svg",
-  pending: "/assets/icons/pending.svg",
-  cancelled: "/assets/icons/cancelled.svg",
+  naplánovat: "/assets/icons/check.svg",
+  nevyřízene: "/assets/icons/pending.svg",
+  zrušit: "/assets/icons/cancelled.svg",
+  vyřešeno: "/assets/icons/check.svg",
 };
