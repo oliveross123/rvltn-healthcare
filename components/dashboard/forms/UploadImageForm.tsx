@@ -14,7 +14,7 @@ import Image from "next/image";
 import { SubmitButton } from "../SubmitButtons";
 import { toast } from "sonner";
 import { UpdatedImage } from "novel/extensions";
-import { UpadteImage } from "@/app/actions";
+import { UpdateImage } from "@/app/actions";
 
 interface iAppProps {
   siteId: string;
@@ -53,7 +53,7 @@ export function UploadImageForm({ siteId }: iAppProps) {
         )}
       </CardContent>
       <CardFooter>
-        <form action={UpadteImage}>
+        <form action={UpdateImage}>
           <input type="hidden" name="siteId" value={siteId} />
           <input type="hidden" name="imageUrl" value={imageUrl} />
           <SubmitButton text="Change Image" />

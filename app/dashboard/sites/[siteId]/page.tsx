@@ -1,5 +1,5 @@
-import prisma from "@/app/utils/db";
 import { EmptyState } from "@/components/dashboard/EmptyState";
+import prisma from "@/app/utils/db";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -37,25 +37,44 @@ import Image from "next/image";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 
-async function getData(clinicId: string, siteId: string) {
-  const data = await prisma.post.findMany({
+async function getData(userId: string, siteId: string) {
+  // TOTO ZUSTANE ZAKOMENTOVANE PROTOŽE TO JINAČ HÁŽE ERRORY
+  /* const data = await prisma.post.findMany({
     where: {
-      clinicId: clinicId,
-      siteId: siteId,
+      id: siteId,
+      userId: userId,
     },
     select: {
       image: true,
       title: true,
       createdAt: true,
       id: true,
-      site: {
+      Site: {
         select: {
           subdirectory: true,
         },
       },
     },
-    orderBy: {
-      createdAt: "desc",
+  }); */
+
+  const data = await prisma.site.findUnique({
+    where: {
+      id: siteId,
+      userId: userId,
+    },
+    select: {
+      subdirectory: true,
+      posts: {
+        select: {
+          image: true,
+          title: true,
+          createdAt: true,
+          id: true,
+        },
+        orderBy: {
+          createdAt: "desc",
+        },
+      },
     },
   });
 
@@ -70,50 +89,39 @@ export default async function SiteIdRoute({
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
-  if (!user || !user.id) {
+  if (!user) {
     return redirect("/api/auth/login");
   }
 
-  // Hledáme kliniku podle unikátního ID uživatele
-  const clinic = await prisma.clinic.findUnique({
-    where: {
-      id: user.id,
-    },
-  });
-
-  if (!clinic || !clinic.id) {
-    return redirect("/api/auth/login");
-  }
-
-  const data = await getData(clinic.id, params.siteId);
+  const data = await getData(user.id, params.siteId);
 
   return (
     <>
       <div className="flex w-full justify-end gap-x-4">
         <Button asChild variant="secondary">
-          <Link href={`/blog/${data[0]?.site?.subdirectory}`}>
-            View blog
+          <Link href={`/blog/${data?.subdirectory}`}>
             <Book className="size-4 mr-2" />
+            Zobrazit stránku
           </Link>
         </Button>
         <Button asChild variant="secondary">
           <Link href={`/dashboard/sites/${params.siteId}/settings`}>
-            Settings
             <Settings className="size-4 mr-2" />
+            Nastavení
           </Link>
         </Button>
         <Button asChild>
           <Link href={`/dashboard/sites/${params.siteId}/create`}>
-            Create Article
             <PlusCircle className="size-4 mr-2" />
+            Vytvořit článek
           </Link>
         </Button>
       </div>
 
-      {data.length === 0 ? (
+      {data?.posts === undefined || data.posts.length === 0 ? (
         <EmptyState
-          title="You don’t have any articles created"
-          description="You currently don’t have any articles. Please create some so you can see them right here."
+          title="You dont have any Articles created"
+          description="You currently dont have any articles. please create some so that you can see them right here"
           buttonText="Create Article"
           href={`/dashboard/sites/${params.siteId}/create`}
         />
@@ -121,12 +129,10 @@ export default async function SiteIdRoute({
         <div>
           <Card>
             <CardHeader>
-              <CardTitle>
-                Articles
-                <CardDescription>
-                  Manage your Articles in a simple and intuitive interface
-                </CardDescription>
-              </CardTitle>
+              <CardTitle>Articles</CardTitle>
+              <CardDescription>
+                Manage your Articles in a simple and intuitive interface
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -140,14 +146,14 @@ export default async function SiteIdRoute({
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {data.map((item) => (
+                  {data.posts.map((item) => (
                     <TableRow key={item.id}>
                       <TableCell>
                         <Image
                           src={item.image}
                           width={64}
                           height={64}
-                          alt="Article Image"
+                          alt="Article Cover Image"
                           className="size-16 rounded-md object-cover"
                         />
                       </TableCell>
@@ -167,6 +173,7 @@ export default async function SiteIdRoute({
                           dateStyle: "medium",
                         }).format(item.createdAt)}
                       </TableCell>
+
                       <TableCell className="text-end">
                         <DropdownMenu>
                           <DropdownMenuTrigger asChild>

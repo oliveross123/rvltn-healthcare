@@ -1,9 +1,9 @@
 import prisma from "@/app/utils/db";
 
-export async function getAppointmentsByClinicId(clinicId: string) {
+export async function getAppointmentsByuserId(userId: string) {
   try {
     const appointments = await prisma.appointment.findMany({
-      where: { clinicId },
+      where: { userId },
       orderBy: { date: "desc" },
       include: {
         doctor: {

@@ -12,7 +12,7 @@ interface AppointmentData {
   clientEmail: string;
   date: Date;
   status: "SCHEDULED" | "PENDING" | "CANCELLED";
-  clinicId: string;
+  userId: string;
   primaryPhysicianId: string;
   reason: string | null;
   note: string | null;
@@ -24,7 +24,7 @@ interface AppointmentData {
 }
 
 export default function AppointmentsPage() {
-  const { clinicId } = useParams();
+  const { userId } = useParams();
   const [appointments, setAppointments] = useState<AppointmentData[]>([]);
   const [scheduledCount, setScheduledCount] = useState(0);
   const [pendingCount, setPendingCount] = useState(0);
@@ -32,12 +32,10 @@ export default function AppointmentsPage() {
 
   // Fetch appointments using Prisma
   const fetchAppointments = async () => {
-    if (!clinicId) return;
+    if (!userId) return;
 
     try {
-      const response = await fetch(
-        `/api/appointments/recent?clinicId=${clinicId}`
-      );
+      const response = await fetch(`/api/appointments/recent?userId=${userId}`);
       if (!response.ok) {
         throw new Error("Error fetching appointments");
       }
@@ -61,9 +59,9 @@ export default function AppointmentsPage() {
 
   useEffect(() => {
     fetchAppointments();
-  }, [clinicId]);
+  }, [userId]);
 
-  if (!clinicId) {
+  if (!userId) {
     return <div>Loading...</div>;
   }
 

@@ -5,14 +5,14 @@ import PatientRegistrationFormV2 from "@/components/forms/PatientRegistrationFor
 
 const RegisterPage = () => {
   const params = useParams();
-  const clinicId = Array.isArray(params?.clinicId)
-    ? params.clinicId[0]
-    : params.clinicId;
+  const userId = Array.isArray(params?.userId)
+    ? params.userId[0]
+    : params.userId;
 
   return (
     <div>
       <h1>Register as a Patient</h1>
-      {clinicId && <PatientRegistrationFormV2 clinicId={clinicId as string} />}
+      {userId && <PatientRegistrationFormV2 userId={userId as string} />}
     </div>
   );
 };

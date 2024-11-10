@@ -13,7 +13,7 @@ import {
 import { formatDateTime, parseStringify } from "../utils";
 import { Appointment } from "@/types/appwrite.types";
 import { revalidatePath } from "next/cache";
-import { getAppointmentsByClinicId } from "../appointments";
+import { getAppointmentsByuserId } from "../appointments";
 import KindeAuth from "@kinde-oss/kinde-auth-nextjs";
 import { getUser } from "@kinde-oss/kinde-auth-nextjs";
 
@@ -123,9 +123,9 @@ export const updatePatient = async (
       throw new Error("Patient not found");
     }
 
-    // Použití user.id jako clinicId pro revalidaci cesty
-    const clinicId = user.id;
-    revalidatePath(`/dashboard/clinics/${clinicId}/patientDatabase`);
+    // Použití user.id jako userId pro revalidaci cesty
+    const userId = user.id;
+    revalidatePath(`/dashboard/users/${userId}/patientDatabase`);
 
     return parseStringify(updatedPatient);
   } catch (error) {

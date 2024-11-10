@@ -6,31 +6,32 @@ export async function GET() {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
 
-  if (!user || !user.id) {
-    throw new Error("User not found");
+  if (!user || user === null || !user.id) {
+    throw new Error("Something went wrong");
   }
 
-  // Hledáme kliniku podle ID uživatele
-  let dbClinic = await prisma.clinic.findUnique({
+  let dbUser = await prisma.user.findUnique({
     where: {
       id: user.id,
     },
   });
 
-  // Pokud klinika neexistuje, vytvoříme novou
-  if (!dbClinic) {
-    dbClinic = await prisma.clinic.create({
+  if (!dbUser) {
+    dbUser = await prisma.user.create({
       data: {
         id: user.id,
-        name: user.given_name ?? "Unknown Clinic",
+        firstName: user.given_name ?? "",
+        lastName: user.family_name ?? "",
         email: user.email ?? "",
-        address: "Unknown Address", // Add a default address or update with actual value if available
         profileImage:
           user.picture ?? `https://avatar.vercel.sh/${user.given_name}`,
-        phoneNumber: null, // Defaulting to null if not available
       },
     });
   }
 
-  return NextResponse.redirect("http://localhost:3000/dashboard");
+  return NextResponse.redirect(
+    process.env.NODE_ENV === "production"
+      ? "http://rvltn-healthcare.vercel.appp/dasboard"
+      : "http://localhost:3000/dashboard"
+  );
 }

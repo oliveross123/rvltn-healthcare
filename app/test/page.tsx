@@ -1,5 +1,5 @@
-import ClinicRegistrationForm from "@/components/forms/ClinicRegistrationForm";
+import userRegistrationForm from "@/components/forms/userRegistrationForm";
 
 export default function testpage() {
-  return <ClinicRegistrationForm />;
+  return <userRegistrationForm />;
 }

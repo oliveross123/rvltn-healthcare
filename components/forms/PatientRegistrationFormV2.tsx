@@ -49,9 +49,9 @@ const patientSchema = z.object({
 });
 
 export default function PatientRegistrationFormV2({
-  clinicId,
+  userId,
 }: {
-  clinicId: string;
+  userId: string;
 }) {
   const [isLoading, setIsLoading] = useState(false);
   const router = useRouter();
@@ -87,7 +87,7 @@ export default function PatientRegistrationFormV2({
     setIsLoading(true);
 
     try {
-      const response = await fetch(`/api/clinics/${clinicId}/patients`, {
+      const response = await fetch(`/api/users/${userId}/patients`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -100,7 +100,7 @@ export default function PatientRegistrationFormV2({
       }
 
       // Redirect to the appointments dashboard after successful registration
-      router.push(`/dashboard/clinics/${clinicId}/appointments`);
+      router.push(`/dashboard/users/${userId}/appointments`);
     } catch (error) {
       console.error("Error creating patient:", error);
     } finally {

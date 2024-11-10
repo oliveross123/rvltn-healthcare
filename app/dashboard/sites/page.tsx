@@ -8,7 +8,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { getKindeServerSession } from "@kinde-oss/kinde-auth-nextjs/server";
-import { FileIcon, PlusCircle } from "lucide-react";
+import { PlusCircle } from "lucide-react";
 import Link from "next/link";
 import { redirect } from "next/navigation";
 import Image from "next/image";
@@ -17,38 +17,49 @@ import { cookies } from "next/headers";
 import { EmptyState } from "@/components/dashboard/EmptyState";
 
 async function getData(userId: string) {
-  const data = await prisma.site.findMany({
-    where: {
-      clinicId: userId,
-    },
-    orderBy: {
-      createdAt: "desc",
-    },
-  });
-
-  return data;
+  try {
+    console.log("Fetching data for userId:", userId); // Debugging log
+    const data = await prisma.site.findMany({
+      where: {
+        userId: userId,
+      },
+      orderBy: {
+        createdAt: "desc",
+      },
+    });
+    console.log("Data fetched:", data); // Debugging log
+    return data;
+  } catch (error) {
+    console.error("Error fetching data for userId:", userId, error); // Error handling
+    return []; // Return empty array to prevent issues if data fetching fails
+  }
 }
 
 export default async function SitesRoute() {
   // Get cookies directly without awaiting the function itself
-  const cookieStore = await cookies();
-  const idToken = cookieStore.get("id_token")?.value;
+  const cookieStore = cookies();
+  const idToken = (await cookieStore).get("id_token")?.value;
+  console.log("ID Token:", idToken); // Debugging log
 
   if (!idToken) {
+    console.warn("No ID Token found, redirecting to login."); // Warning log
     return redirect("/api/auth/login");
   }
 
   const { getUser } = getKindeServerSession();
   const user = await getUser();
+  console.log("User fetched:", user); // Debugging log
 
   if (!user) {
+    console.warn("No user found, redirecting to login."); // Warning log
     return redirect("/api/auth/login");
   }
 
   const data = await getData(user.id);
+
   return (
     <>
-      <div className="flex w-full justify-end ">
+      <div className="flex w-full justify-end">
         <Button asChild className="bg-green-400/70">
           <Link href={"/dashboard/sites/new"}>
             <div className="flex items-center">
@@ -59,11 +70,10 @@ export default async function SitesRoute() {
         </Button>
       </div>
 
-      {data === undefined || data.length === 0 ? (
+      {data.length === 0 ? ( // Updated conditional to handle empty data
         <EmptyState
-          title="You dont have any sites created"
-          description="You currently don’t have any sites. Please create some so that you can
-        see them here"
+          title="You don't have any sites created"
+          description="You currently don’t have any sites. Please create some so that you can see them here."
           buttonText="Create Site"
           href="/dashboard/sites/new"
         />

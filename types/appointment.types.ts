@@ -4,7 +4,7 @@ export interface CreateAppointmentParams {
   clientName: string;
   clientEmail: string;
   date: Date;
-  clinicId: string;
+  userId: string;
   primaryPhysician: string;
   status: AppointmentStatus;
   reason?: string;

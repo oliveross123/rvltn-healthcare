@@ -25,10 +25,10 @@ export default async function DashboardLayout({
 }) {
   const { getUser } = getKindeServerSession();
   const user = await getUser();
-  const clinicId = user?.id;
+  const userId = user?.id;
 
-  // Check if clinicId is available
-  if (!clinicId) {
+  // Check if userId is available
+  if (!userId) {
     return <div>Loading...</div>; // Nebo zpracujte chybu, jak je třeba
   }
 
@@ -40,12 +40,12 @@ export default async function DashboardLayout({
     },
     {
       name: "Termíny",
-      href: `/dashboard/clinics/${clinicId}/appointments`,
+      href: `/dashboard/appointments`,
       icon: CalendarCheck,
     },
     {
       name: "Pacienti",
-      href: `/dashboard/clinics/${clinicId}/patientDatabase`,
+      href: `/dashboard/users/${userId}/patientDatabase`,
       icon: CircleUser,
     },
     {

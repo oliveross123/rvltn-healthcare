@@ -10,19 +10,19 @@ import { useRouter } from "next/navigation";
 import { requireUser } from "@/app/utils/requireUser";
 
 // Zod schema for form validation
-const clinicSchema = z.object({
-  name: z.string().nonempty("Clinic name is required"),
+const userSchema = z.object({
+  name: z.string().nonempty("user name is required"),
   address: z.string().nonempty("Address is required"),
   email: z.string().email("Invalid email address"),
   phoneNumber: z.string().optional(),
 });
 
-type ClinicFormValues = z.infer<typeof clinicSchema>;
+type userFormValues = z.infer<typeof userSchema>;
 
-const ClinicRegistrationForm = () => {
+const userRegistrationForm = () => {
   const router = useRouter();
-  const form = useForm<ClinicFormValues>({
-    resolver: zodResolver(clinicSchema),
+  const form = useForm<userFormValues>({
+    resolver: zodResolver(userSchema),
     defaultValues: {
       name: "",
       address: "",
@@ -43,10 +43,10 @@ const ClinicRegistrationForm = () => {
     fetchUser();
   }, [router]);
 
-  const onSubmit = async (values: ClinicFormValues) => {
+  const onSubmit = async (values: userFormValues) => {
     try {
-      // API call to save clinic information
-      const response = await fetch("/api/clinics/register", {
+      // API call to save user information
+      const response = await fetch("/api/users/register", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -55,23 +55,23 @@ const ClinicRegistrationForm = () => {
       });
 
       if (!response.ok) {
-        throw new Error("Failed to register clinic");
+        throw new Error("Failed to register user");
       }
 
       // Redirect to dashboard after successful registration
-      router.push("/dashboard/clinics");
+      router.push("/dashboard/users");
     } catch (error) {
-      console.error("Error registering clinic:", error);
+      console.error("Error registering user:", error);
     }
   };
 
   return (
     <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-      <h1>Register Your Clinic</h1>
+      <h1>Register Your user</h1>
 
       <div>
-        <label>Clinic Name</label>
-        <Input placeholder="Clinic Name" {...form.register("name")} />
+        <label>user Name</label>
+        <Input placeholder="user Name" {...form.register("name")} />
       </div>
 
       <div>
@@ -89,9 +89,9 @@ const ClinicRegistrationForm = () => {
         <Input placeholder="Phone Number" {...form.register("phoneNumber")} />
       </div>
 
-      <Button type="submit">Register Clinic</Button>
+      <Button type="submit">Register user</Button>
     </form>
   );
 };
 
-export default ClinicRegistrationForm;
+export default userRegistrationForm;
