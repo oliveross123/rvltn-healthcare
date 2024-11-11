@@ -23,17 +23,27 @@ interface iAppProps {
 export const PricingPlans = [
   {
     id: 0,
-    cardTitle: "Basic",
-    cardDescription: "For small teams",
-    priceTitle: "Free",
-    beneftis: ["1 User", "10 Projects", "2GB Storage"],
+    cardTitle: "Jedinec",
+    cardDescription: "Vhodné pro jednotlivce",
+    priceTitle: "990 CZK / Měsíc",
+    beneftis: [
+      "První měsíc zdarma!",
+      "1 Uživatel",
+      "Nemoezený kalendář a kartotéka",
+      "SMS a E-mail notifikace",
+    ],
   },
   {
     id: 1,
-    cardTitle: "Pro",
-    cardDescription: "For medium teams",
-    priceTitle: "$20",
-    beneftis: ["5 Users", "50 Projects", "20GB Storage"],
+    cardTitle: "Klinika",
+    cardDescription: "Vhodné pro kliniku kde operuje více veterinářů",
+    priceTitle: "1600 CZK / měsíc",
+    beneftis: [
+      "3 Uživatelé",
+      "Nemoezený kalendář a kartotéka",
+      "SMS a E-mail notifikace",
+      "CMS Modul + 1 Web pro kliniku v ceně",
+    ],
   },
 ];
 
@@ -41,15 +51,16 @@ export function PricingTable() {
   return (
     <>
       <div className="max-w-4xl mx-auto text-center">
-        <p className="font-semibold text-primary">Pricing</p>
+        <p className="font-semibold text-primary">Ceník</p>
         <h1 className="mt-2 text-4xl font-bold tracking-tight sm:text-5xl">
-          Pricing plans for everyone and every budget!
+          Ceník vhodný jak pro jedince tak pro celou kliniku!
         </h1>
       </div>
 
       <p className="mx-auto mt-6 max-w-2xl text-center leading-tight text-muted-foreground">
-        Lorem ipsum dolor sit amet consectetur adipisicing elit. Odio cupiditate
-        modi blanditiis.
+        Zvolte si cenový plán který vám nejvíce vyhovuje. Můžete si vybrat mezi
+        licencí pro jednotlivce nebo pro celou kliniku. pokud máte zvláštní
+        požadavek neváhejte nás kontaktovat.
       </p>
 
       <div className="grid grid-cols-1 gap-8 mt-16 lg:grid-cols-2">
@@ -62,10 +73,10 @@ export function PricingTable() {
               <CardTitle>
                 {item.id === 1 ? (
                   <div className="flex items-center justify-between">
-                    <h3 className="text-green-500">Startup</h3>
+                    <h3 className="text-green-500">Klinika</h3>
 
                     <p className="rounded-full bg-green-500/20 px-3 py-1 text-xs font-semibold text-green-500">
-                      Most popular
+                      Oblíbene
                     </p>
                   </div>
                 ) : (
@@ -99,13 +110,13 @@ export function PricingTable() {
               {item.id === 1 ? (
                 <form className="w-full" action={CreateSubscription}>
                   <SubmitButton
-                    text="Buy Plan"
+                    text="Koupit plán"
                     className="mt-5 w-full bg-green-500"
                   />
                 </form>
               ) : (
                 <Button variant="outline" className="mt-5 w-full" asChild>
-                  <Link href="/dashboard">Try for free</Link>
+                  <Link href="/dashboard">Vyzkoušet zdarma!</Link>
                 </Button>
               )}
             </CardFooter>
