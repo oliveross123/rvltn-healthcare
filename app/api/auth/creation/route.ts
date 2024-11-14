@@ -31,7 +31,7 @@ export async function GET() {
 
   return NextResponse.redirect(
     process.env.NODE_ENV === "production"
-      ? "https://rvltn-healthcare.vercel.app/pricing"
+      ? "https://rvltn-healthcare.vercel.app/dashboard/pricing"
       : "http://localhost:3000/dashboard"
   );
 }

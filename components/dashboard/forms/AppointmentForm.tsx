@@ -29,6 +29,32 @@ export default function AppointmentForm() {
   const [appointmentDateTime, setAppointmentDateTime] = useState(new Date());
   const [clinicId, setClinicId] = useState("");
 
+  const mapAnimalCategory = (category: string): "PES" | "KOCKA" | "JINE" => {
+    switch (category.toLowerCase()) {
+      case "pes":
+        return "PES";
+      case "kočka":
+        return "KOCKA";
+      default:
+        return "JINE";
+    }
+  };
+
+  const mapIssueCategory = (
+    issue: string
+  ): "AKUTNI_PRIKLAD" | "STRIHANI_DRAPKU" | "KONTROLA" | "OCKOVANI" => {
+    switch (issue.toLowerCase()) {
+      case "akutní případ":
+        return "AKUTNI_PRIKLAD";
+      case "stříhání drápku":
+        return "STRIHANI_DRAPKU";
+      case "kontrola":
+        return "KONTROLA";
+      default:
+        return "OCKOVANI";
+    }
+  };
+
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
     try {
@@ -37,10 +63,10 @@ export default function AppointmentForm() {
         patientLastName,
         contactPhone,
         contactEmail,
-        animalCategory,
+        animalCategory: mapAnimalCategory(animalCategory),
         animalBreed,
         notes,
-        issueCategory,
+        issueCategory: mapIssueCategory(issueCategory),
         appointmentDateTime,
         clinicId,
       });
@@ -134,13 +160,20 @@ export default function AppointmentForm() {
         </div>
         <div className="grid gap-2">
           <Label htmlFor="issueCategory">Kategorie problému</Label>
-          <Input
-            className="bg-white rounded-md"
-            value={issueCategory}
-            onChange={(e) => setIssueCategory(e.target.value)}
-            id="issueCategory"
-            placeholder="Kategorie problému"
-          />
+          <Select
+            onValueChange={(value) => setIssueCategory(value)}
+            defaultValue="---"
+          >
+            <SelectTrigger>
+              <SelectValue placeholder="Select a category" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="Akutní případ">Akutní případ</SelectItem>
+              <SelectItem value="Stříhání drápku">Stříhání drápků</SelectItem>
+              <SelectItem value="Kontrola">Kontrola</SelectItem>
+              <SelectItem value="Ockovani">Očkování</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <div className="grid gap-2">
           <Label htmlFor="appointmentDateTime">Datum a čas</Label>

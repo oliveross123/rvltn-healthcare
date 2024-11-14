@@ -25,10 +25,10 @@ interface CreateAppointmentInput {
   patientLastName: string;
   contactPhone: string;
   contactEmail: string;
-  animalCategory: string;
+  animalCategory: "PES" | "KOCKA" | "JINE";
   animalBreed: string;
   notes: string;
-  issueCategory: string;
+  issueCategory: "AKUTNI_PRIKLAD" | "STRIHANI_DRAPKU" | "KONTROLA" | "OCKOVANI";
   appointmentDateTime: Date;
   clinicId: string;
 }
