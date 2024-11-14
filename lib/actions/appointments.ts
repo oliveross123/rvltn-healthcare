@@ -1,78 +1,59 @@
 "use server";
 
+// import our genereated Prisma client
 import prisma from "@/app/utils/db";
-import { reservationSchema } from "@/app/utils/zodSchemas";
+
+// model Appointment {
+//     id                  String         @id @default(uuid())
+//     patientFirstName    String
+//     patientLastName     String
+//     contactPhone        String
+//     contactEmail        String
+//     animalCategory      AnimalCategory
+//     animalBreed         String
+//     notes               String?
+//     issueCategory       IssueCategory
+//     appointmentDateTime DateTime
+//     clinicId            String
+//     clinic              User           @relation(fields: [clinicId], references: [id])
+//     createdAt           DateTime       @default(now())
+//     updatedAt           DateTime       @updatedAt
+//   }
 
 interface CreateAppointmentInput {
   patientFirstName: string;
   patientLastName: string;
   contactPhone: string;
   contactEmail: string;
-  animalCategory: "PES" | "KOCKA" | "JINE";
+  animalCategory: string;
   animalBreed: string;
-  notes?: string;
-  issueCategory: "AKUTNI_PRIKLAD" | "STRIHANI_DRAPKU" | "KONTROLA" | "OCKOVANI";
-  appointmentDateTime: Date | string;
+  notes: string;
+  issueCategory: string;
+  appointmentDateTime: Date;
   clinicId: string;
 }
 
 export async function createAppointment(input: CreateAppointmentInput) {
   try {
-    // Validate the input data using Zod schema
-    const validatedData = reservationSchema.parse({
-      ...input,
-      appointmentDateTime: new Date(input.appointmentDateTime), // Convert to Date object if needed
-    });
-
-    // Destructure the validated data for database insertion
-    const {
-      patientFirstName,
-      patientLastName,
-      contactPhone,
-      contactEmail,
-      animalCategory,
-      animalBreed,
-      notes,
-      issueCategory,
-      appointmentDateTime,
-      clinicId,
-    } = validatedData;
-
-    // Ensure the clinic exists (optional step for verification)
-    const clinic = await prisma.user.findUnique({
-      where: { id: clinicId },
-    });
-
-    if (!clinic) {
-      throw new Error("Clinic not found");
-    }
-
-    // Create a new appointment record
+    // create a new appointments in the db
     const newAppointment = await prisma.appointment.create({
       data: {
-        patientFirstName,
-        patientLastName,
-        contactPhone,
-        contactEmail,
-        animalCategory,
-        animalBreed,
-        notes: notes || null,
-        issueCategory,
-        appointmentDateTime:
-          appointmentDateTime instanceof Date
-            ? appointmentDateTime
-            : new Date(appointmentDateTime),
-        clinicId,
+        patientFirstName: input.patientFirstName,
+        patientLastName: input.patientLastName,
+        contactPhone: input.contactPhone,
+        contactEmail: input.contactEmail,
+        animalCategory: input.animalCategory,
+        animalBreed: input.animalBreed,
+        notes: input.notes,
+        issueCategory: input.issueCategory,
+        appointmentDateTime: input.appointmentDateTime,
+        clinicId: input.clinicId,
       },
     });
 
-    // Return success response
-    return { success: true, data: newAppointment };
+    return newAppointment;
   } catch (error) {
-    // Handle and return error response
-    return {
-      success: false,
-      error: error instanceof Error ? error.message : "Unknown error",
-    };
+    console.error("Failed to create appointment", error);
+    throw new Error("Failed to create appointment");
   }
 }
