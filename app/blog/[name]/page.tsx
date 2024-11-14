@@ -2,7 +2,7 @@ import prisma from "@/app/utils/db";
 import Logo from "@/public/assets/icons/logo-icon.svg";
 import { notFound } from "next/navigation";
 import Image from "next/image";
-import { ReservatoinButton } from "@/components/ReservevationButton";
+import { ReservationButton } from "@/components/ReservationButton";
 import {
   Card,
   CardDescription,
@@ -61,9 +61,12 @@ export default async function BlogIndexPage({
         </div>
 
         <div className="col-span-1 flex w-full justify-end">
-          <ReservatoinButton />
+          <ReservationButton clinicName={params.name} />
         </div>
       </nav>
+      <div>
+        <h2 className="text-2xl font-semibold">Nejnovější články</h2>
+      </div>
       <div className="grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3 lg:gap-7">
         {data.posts.map((item) => (
           <Card key={item.id}>
