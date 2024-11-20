@@ -103,8 +103,9 @@ model Appointment {
   notes               String?
   issueCategory       IssueCategory
   appointmentDateTime DateTime
-  clinicId            String
-  clinic              User           @relation(fields: [clinicId], references: [id])
+  clinicId            String         @map("clinic_id")
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
+  User                User?          @relation(fields: [userId], references: [id])
+  userId              String?
 }

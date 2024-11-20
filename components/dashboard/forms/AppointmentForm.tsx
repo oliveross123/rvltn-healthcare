@@ -1,7 +1,8 @@
 "use client";
 
+import { useParams } from "next/navigation";
+import { CreateAppointmentInput } from "@/lib/actions/appointments"; // Import správné funkce
 import { Button } from "@/components/ui/button";
-import { FormField } from "@/components/ui/form";
 import { Label } from "@/components/ui/label";
 import {
   Select,
@@ -10,76 +11,61 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { createAppointment } from "@/lib/actions/appointments";
-import { Card, Input } from "@mui/material";
-import { FormEvent } from "react";
-import { useState } from "react";
-
-export const revalidate = 1;
+import { Input } from "@mui/material";
+import { FormEvent, useState } from "react";
 
 export default function AppointmentForm() {
+  const { name } = useParams<{ name: string }>();
+
   const [patientFirstName, setPatientFirstName] = useState("");
   const [patientLastName, setPatientLastName] = useState("");
   const [contactPhone, setContactPhone] = useState("");
   const [contactEmail, setContactEmail] = useState("");
-  const [animalCategory, setAnimalCategory] = useState("pes");
+  const [animalCategory, setAnimalCategory] = useState<
+    "PES" | "KOCKA" | "JINE"
+  >("PES");
   const [animalBreed, setAnimalBreed] = useState("");
   const [notes, setNotes] = useState("");
-  const [issueCategory, setIssueCategory] = useState("");
+  const [issueCategory, setIssueCategory] = useState<
+    "AKUTNI_PRIKLAD" | "STRIHANI_DRAPKU" | "KONTROLA" | "OCKOVANI"
+  >("AKUTNI_PRIKLAD");
   const [appointmentDateTime, setAppointmentDateTime] = useState(new Date());
-  const [clinicId, setClinicId] = useState("");
 
-  const mapAnimalCategory = (category: string): "PES" | "KOCKA" | "JINE" => {
-    switch (category.toLowerCase()) {
-      case "pes":
-        return "PES";
-      case "kočka":
-        return "KOCKA";
-      default:
-        return "JINE";
-    }
-  };
-
-  const mapIssueCategory = (
-    issue: string
-  ): "AKUTNI_PRIKLAD" | "STRIHANI_DRAPKU" | "KONTROLA" | "OCKOVANI" => {
-    switch (issue.toLowerCase()) {
-      case "akutní případ":
-        return "AKUTNI_PRIKLAD";
-      case "stříhání drápku":
-        return "STRIHANI_DRAPKU";
-      case "kontrola":
-        return "KONTROLA";
-      default:
-        return "OCKOVANI";
-    }
-  };
+  if (!name) {
+    return <p>Error: Subdirectory name is missing in the URL.</p>;
+  }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
+
+    const appointmentData = {
+      patientFirstName,
+      patientLastName,
+      contactPhone,
+      contactEmail,
+      animalCategory,
+      animalBreed,
+      notes,
+      issueCategory,
+      appointmentDateTime,
+      clinicId: name, // Přímo použijeme `name` jako `clinicId`
+    };
+
     try {
-      await createAppointment({
-        patientFirstName,
-        patientLastName,
-        contactPhone,
-        contactEmail,
-        animalCategory: mapAnimalCategory(animalCategory),
-        animalBreed,
-        notes,
-        issueCategory: mapIssueCategory(issueCategory),
-        appointmentDateTime,
-        clinicId,
-      });
+      console.log("Submitting appointment data:", appointmentData);
+      await CreateAppointmentInput(appointmentData);
+      alert("Appointment created successfully!");
     } catch (error) {
-      // show some toast or alert to the user
-      console.error("Error creating reservation:", error);
+      console.error("Error creating appointment:", error);
+      alert("Failed to create appointment. Please try again.");
     }
   };
+
   return (
     <form onSubmit={handleSubmit} className="text-white">
       <div className="grid gap-4">
         <h1 className="text-3xl font-bold">Rezervace termínu</h1>
-        <p className="text-green-500">Vyplňtě formulář</p>
+        <p className="text-green-500">Vyplňte formulář</p>
       </div>
       <div className="grid gap-6">
         <div className="grid gap-2">
@@ -125,16 +111,18 @@ export default function AppointmentForm() {
         <div className="grid gap-2">
           <Label htmlFor="category">Druh zvířete</Label>
           <Select
-            onValueChange={(value) => setAnimalCategory(value)}
-            defaultValue="---"
+            onValueChange={(value) =>
+              setAnimalCategory(value as "PES" | "KOCKA" | "JINE")
+            }
+            defaultValue="PES"
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
+              <SelectValue placeholder="Vyberte kategorii" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="pes">Pes</SelectItem>
-              <SelectItem value="kočka">Kočka</SelectItem>
-              <SelectItem value="jiné">Jiné</SelectItem>
+              <SelectItem value="PES">Pes</SelectItem>
+              <SelectItem value="KOCKA">Kočka</SelectItem>
+              <SelectItem value="JINE">Jiné</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -161,17 +149,25 @@ export default function AppointmentForm() {
         <div className="grid gap-2">
           <Label htmlFor="issueCategory">Kategorie problému</Label>
           <Select
-            onValueChange={(value) => setIssueCategory(value)}
-            defaultValue="---"
+            onValueChange={(value) =>
+              setIssueCategory(
+                value as
+                  | "AKUTNI_PRIKLAD"
+                  | "STRIHANI_DRAPKU"
+                  | "KONTROLA"
+                  | "OCKOVANI"
+              )
+            }
+            defaultValue="AKUTNI_PRIKLAD"
           >
             <SelectTrigger>
-              <SelectValue placeholder="Select a category" />
+              <SelectValue placeholder="Vyberte kategorii" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="Akutní případ">Akutní případ</SelectItem>
-              <SelectItem value="Stříhání drápku">Stříhání drápků</SelectItem>
-              <SelectItem value="Kontrola">Kontrola</SelectItem>
-              <SelectItem value="Ockovani">Očkování</SelectItem>
+              <SelectItem value="AKUTNI_PRIKLAD">Akutní případ</SelectItem>
+              <SelectItem value="STRIHANI_DRAPKU">Stříhání drápku</SelectItem>
+              <SelectItem value="KONTROLA">Kontrola</SelectItem>
+              <SelectItem value="OCKOVANI">Očkování</SelectItem>
             </SelectContent>
           </Select>
         </div>
@@ -179,24 +175,13 @@ export default function AppointmentForm() {
           <Label htmlFor="appointmentDateTime">Datum a čas</Label>
           <Input
             className="bg-white rounded-md"
-            value={appointmentDateTime.toISOString().slice(0, 16)} // fromat date for input tpe = "datetime-local"
-            onChange={(e) => setAppointmentDateTime(new Date(e.target.value))} // convert input value to Date
+            value={appointmentDateTime.toISOString().slice(0, 16)}
+            onChange={(e) => setAppointmentDateTime(new Date(e.target.value))}
             id="appointmentDateTime"
             type="datetime-local"
             placeholder="Datum a čas"
           />
         </div>
-        <div className="grid gap-2">
-          <Label htmlFor="clinicId">Klinika</Label>
-          <Input
-            className="bg-white rounded-md"
-            value={clinicId}
-            onChange={(e) => setClinicId(e.target.value)}
-            id="clinicId"
-            placeholder="Klinika"
-          />
-        </div>
-
         <div className="flex justify-end gap-2">
           <Button variant="outline">Zrušit</Button>
           <Button className="bg-green-500">Rezervovat</Button>
@@ -205,3 +190,6 @@ export default function AppointmentForm() {
     </form>
   );
 }
+
+//TODO: SMS & E-mail Notifikace
+//TODO: Toast notifikace a přesměrování
