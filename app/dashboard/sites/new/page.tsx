@@ -38,32 +38,34 @@ export default function NewSiteRoute() {
     <div className="flex flex-col flex-1 justify-center items-start">
       <Card className="max-w-[450px]">
         <CardHeader>
-          <CardTitle>Create site</CardTitle>
+          <CardTitle>Vytvořit web stránku</CardTitle>
           <CardDescription>
-            Create your site here. click the button bellow once you are done!
+            Vytvořte novou webovou stránku pro vaši kliniku právě zde
           </CardDescription>
         </CardHeader>
         <form id={form.id} onSubmit={form.onSubmit} action={action}>
           <CardContent>
             <div className="flex flex-col gap-y-6">
               <div className="grid gap-3">
-                <Label>Site Name</Label>
+                <Label>Název domény webové stránky</Label>
                 <Input
                   name={fields.name.name}
                   key={fields.name.key}
                   defaultValue={fields.name.initialValue}
-                  placeholder="Site name"
+                  placeholder="Skvělá Klinika"
                 />
                 <p className="text-red-500 text-sm">{fields.name.errors}</p>
               </div>
 
               <div className="grid gap-2">
-                <Label>Subdirectory</Label>
+                <Label>
+                  Název kliniky, pište v celku bez diakritiky, malým
+                </Label>
                 <Input
                   name={fields.subdirectory.name}
                   key={fields.subdirectory.key}
                   defaultValue={fields.subdirectory.initialValue}
-                  placeholder="Subdirectory"
+                  placeholder="skvelaklinika"
                 />
                 <p className="text-red-500 text-sm">
                   {fields.subdirectory.errors}
@@ -71,19 +73,19 @@ export default function NewSiteRoute() {
               </div>
 
               <div className="grid gap-2">
-                <Label>Description</Label>
+                <Label>Popis</Label>
                 <Textarea
                   name={fields.description.name}
                   key={fields.description.key}
                   defaultValue={fields.description.initialValue}
-                  placeholder="Small description for your site"
+                  placeholder="Stručně popište vaši kliniku"
                 />
                 <p className="text-red-500">{fields.description.errors}</p>
               </div>
             </div>
           </CardContent>
           <CardFooter>
-            <SubmitButton text="Create Site" />
+            <SubmitButton text="Vytvořit web" />
           </CardFooter>
         </form>
       </Card>

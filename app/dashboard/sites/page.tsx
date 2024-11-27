@@ -64,7 +64,7 @@ export default async function SitesRoute() {
           <Link href={"/dashboard/sites/new"}>
             <div className="flex items-center">
               <PlusCircle className="mr-2 size-4" />
-              <span>Create Site</span>
+              <span>Vytvořit web</span>
             </div>
           </Link>
         </Button>
@@ -74,7 +74,7 @@ export default async function SitesRoute() {
         <EmptyState
           title="You don't have any sites created"
           description="You currently don’t have any sites. Please create some so that you can see them here."
-          buttonText="Create Site"
+          buttonText="Vytvořit web"
           href="/dashboard/sites/new"
         />
       ) : (

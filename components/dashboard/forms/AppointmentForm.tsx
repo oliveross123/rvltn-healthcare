@@ -171,6 +171,14 @@ export default function AppointmentForm() {
             </SelectContent>
           </Select>
         </div>
+        //TODO: vytvořit vlastní komponent pro koplexní kalendář co řeší
+        problematiku mazlíčka i doktora 
+        
+        //TODO: vlastní komponent pro komplexní
+        kalendář, v části kdy klinika si vytváři web, přidat možnost vyplnit
+        ordinační hodiny které se propíšou do kalendáře.
+
+        
         <div className="grid gap-2">
           <Label htmlFor="appointmentDateTime">Datum a čas</Label>
           <Input
@@ -193,3 +201,4 @@ export default function AppointmentForm() {
 
 //TODO: SMS & E-mail Notifikace
 //TODO: Toast notifikace a přesměrování
+//TODO: Implementace systému dynamické pracovní doby s možností nastavení intervalů, typů služeb a blokování obsazených termínů

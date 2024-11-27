@@ -25,9 +25,9 @@ export function UploadImageForm({ siteId }: iAppProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Image</CardTitle>
+        <CardTitle>Náhled</CardTitle>
         <CardDescription>
-          This is the image of your site. you can change it here
+          Zde je náhledový obrázek vašeho webu, můžete ho změnit zde.
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -44,10 +44,10 @@ export function UploadImageForm({ siteId }: iAppProps) {
             endpoint="imageUploader"
             onClientUploadComplete={(res) => {
               setImageUrl(res[0].url);
-              toast.success("Image has been uploaded");
+              toast.success("Obrázek byl nahrán úspěšně");
             }}
             onUploadError={() => {
-              toast.error("Image upload failed");
+              toast.error("Něco se pokazilo...");
             }}
           />
         )}
@@ -56,7 +56,7 @@ export function UploadImageForm({ siteId }: iAppProps) {
         <form action={UpdateImage}>
           <input type="hidden" name="siteId" value={siteId} />
           <input type="hidden" name="imageUrl" value={imageUrl} />
-          <SubmitButton text="Change Image" />
+          <SubmitButton text="Změnit obrázek" />
         </form>
       </CardFooter>
     </Card>

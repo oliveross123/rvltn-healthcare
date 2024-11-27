@@ -45,6 +45,20 @@ model Site {
   User     User?   @relation(fields: [userId], references: [id])
   userId   String?
   posts    Post[]
+
+  //ONE TO MANY realaltionship
+  workingHours WorkingHours[]
+}
+
+model WorkingHours {
+  id        String   @id @default(uuid())
+  dayOfWeek Int // 0 = neděle, 1 = pondělí, 2 = úterý, 3 = středa, 4 = čtvrtek, 5 = pátek, 6 = sobota
+  openTime  String // např. 08:00
+  closeTime String // např. 17:00
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  siteId    String?
+  Site      Site?    @relation(fields: [siteId], references: [id])
 }
 
 model Post {

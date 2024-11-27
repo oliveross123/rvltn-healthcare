@@ -59,11 +59,11 @@ export const getRecentAppointmentList = async () => {
     };
     const counts = (appointments.documents as Appointment[]).reduce(
       (acc, appointment) => {
-        if (appointment.status === "naplánovat") {
+        if (appointment.status === "scheduled") {
           acc.scheduledCount += 1;
-        } else if (appointment.status === "nevyřízene") {
+        } else if (appointment.status === "pending") {
           acc.pendingCount += 1;
-        } else if (appointment.status === "zrušit") {
+        } else if (appointment.status === "cancelled") {
           acc.cancelledCount += 1;
         }
 
@@ -105,11 +105,11 @@ export const updateAppointment = async ({
     const smsMessage = `
     Hi, its Healthcare.
   ${
-    type === "naplánovat"
-      ? `Váš termín byl naplánovan na datum:  ${
+    type === "schedule"
+      ? `your appointment has been scheduled for ${
           formatDateTime(appointment.schedule!).dateTime
-        } with MVDr. ${appointment.primaryPhysician}`
-      : `Váš termín byl zrušen - důvod: ${appointment.cancellationReason}`
+        } with Dr. ${appointment.primaryPhysician}`
+      : `your appointment has been cancelled. Reason: ${appointment.cancellationReason}`
   }`;
 
     await sendSMSNotification(userId, smsMessage);
