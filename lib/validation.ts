@@ -109,12 +109,26 @@ export const CancelAppointmentSchema = z.object({
     .max(500, "Důvod může mít maximálně 500 znaků"),
 });
 
+export const SolveAppointmentSchema = z.object({
+  primaryPhysician: z.string().min(2, "Vyberte alespoň jednoho lékaře"),
+  schedule: z.coerce.date(),
+  reason: z.string().optional(),
+  note: z.string().optional(),
+  cancellationReason: z.string().optional(),
+  solvedNote: z
+    .string()
+    .min(2, "Důvod musí mít alespoň 2 znaky")
+    .max(500, "Důvod může mít maximálně 500 znaků"),
+});
+
 export function getAppointmentSchema(type: string) {
   switch (type) {
-    case "create":
+    case "naplánovat":
       return CreateAppointmentSchema;
-    case "cancel":
+    case "zrušit":
       return CancelAppointmentSchema;
+    case "vyřešeno":
+      return SolveAppointmentSchema;
     default:
       return ScheduleAppointmentSchema;
   }

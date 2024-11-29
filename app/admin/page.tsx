@@ -29,7 +29,7 @@ const Admin = async () => {
           </Link>
         </Link>
 
-        <p className="text-16-semibold">Administrátorský panel</p>
+        <p className="text-16-semibold">Přehled termínu</p>
       </header>
 
       <main className="admin-main">
@@ -40,21 +40,21 @@ const Admin = async () => {
 
         <section className="admin-stat">
           <StatCard
-            type="appointments"
+            type="naplánovat"
             count={appointments.scheduledCount}
             label="Naplánované termíny"
             icon="/assets/icons/appointments.svg"
           />
 
           <StatCard
-            type="pending"
+            type="nevyřízene"
             count={appointments.pendingCount}
-            label="Nevyřízene termíny"
+            label="Nevyřízené termíny"
             icon="/assets/icons/pending.svg"
           />
 
           <StatCard
-            type="cancelled"
+            type="zrušit"
             count={appointments.cancelledCount}
             label="Zrušené termíny"
             icon="/assets/icons/cancelled.svg"

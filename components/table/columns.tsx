@@ -38,7 +38,7 @@ export const columns: ColumnDef<Appointment>[] = [
     },
   },
   {
-    accessorKey: "schedule",
+    accessorKey: "naplánovat",
     header: "Termín",
     cell: ({ row }) => {
       const appointment = row.original;
@@ -68,14 +68,14 @@ export const columns: ColumnDef<Appointment>[] = [
             height={100}
             className="size-8"
           />
-          <p className="whitespace-nowrap">Dr. {doctor?.name}</p>
+          <p className="whitespace-nowrap">MVDr. {doctor?.name}</p>
         </div>
       );
     },
   },
   {
     id: "actions",
-    header: () => <div className="pl-4">Akce</div>,
+    header: () => <div className="pl-5">Akce</div>,
     cell: ({ row }) => {
       const appointment = row.original;
 
@@ -86,12 +86,24 @@ export const columns: ColumnDef<Appointment>[] = [
             userId={appointment.userId}
             appointment={appointment}
             type="naplánovat"
+            title="Naplánovat termín"
+            description="Vyplňte podrobnosti pro naplánování termínu."
           />
           <AppointmentModal
             patientId={appointment.patient.$id}
             userId={appointment.userId}
             appointment={appointment}
             type="zrušit"
+            title="Zrušit termín"
+            description="Uveďte důvod pro zrušení termínu."
+          />
+          <AppointmentModal
+            patientId={appointment.patient.$id}
+            userId={appointment.userId}
+            appointment={appointment}
+            type="vyřešeno"
+            title="Vyřešit termín"
+            description="Vyplňte podrobnosti pro vyřešení termínu."
           />
         </div>
       );
