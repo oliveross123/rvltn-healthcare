@@ -4,7 +4,7 @@ import { useState, useEffect } from "react";
 import {
   fetchWorkingHours,
   saveWorkingHours,
-} from "@/lib/actions/workingHours";
+} from "../../lib/actions/workingHours";
 import { toast } from "sonner";
 import { Button } from "../ui/button";
 
