@@ -59,12 +59,7 @@ export const reservationSchema = z.object({
   animalCategory: z.enum(["PES", "KOCKA", "JINE"]),
   animalBreed: z.string().nonempty("Plemeno je povinné"),
   notes: z.string().optional(),
-  issueCategory: z.enum([
-    "AKUTNI_PRIKLAD",
-    "STRIHANI_DRAPKU",
-    "KONTROLA",
-    "OCKOVANI",
-  ]),
+  issueCategory: z.string().nonempty("Kategorie je povinná"),
   appointmentDateTime: z.preprocess(
     (arg) => (typeof arg === "string" ? new Date(arg) : arg),
     z.date()

@@ -47,7 +47,8 @@ model Site {
   posts    Post[]
 
   //ONE TO MANY realaltionship
-  workingHours WorkingHours[]
+  workingHours  WorkingHours[]
+  issueCategory IssueCategory[]
 }
 
 model WorkingHours {
@@ -59,6 +60,19 @@ model WorkingHours {
   updatedAt DateTime @updatedAt
   siteId    String?
   Site      Site?    @relation(fields: [siteId], references: [id])
+}
+
+model IssueCategory {
+  id        String   @id @default(uuid())
+  name      String   @unique
+  duration  String
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  //ONE TO MANY realaltionship
+  siteId      String?
+  Site        Site?         @relation(fields: [siteId], references: [id])
+  Appointment Appointment[]
 }
 
 model Post {
@@ -99,12 +113,12 @@ enum AnimalCategory {
   JINE
 }
 
-enum IssueCategory {
-  AKUTNI_PRIKLAD
-  STRIHANI_DRAPKU
-  KONTROLA
-  OCKOVANI
-}
+// enum IssueCategory {
+//   AKUTNI_PRIKLAD
+//   STRIHANI_DRAPKU
+//   KONTROLA
+//   OCKOVANI
+// }
 
 model Appointment {
   id                  String         @id @default(uuid())
@@ -115,11 +129,12 @@ model Appointment {
   animalCategory      AnimalCategory
   animalBreed         String
   notes               String?
-  issueCategory       IssueCategory
+  issueCategory       IssueCategory  @relation(fields: [issueCategoryId], references: [id])
   appointmentDateTime DateTime
   clinicId            String         @map("clinic_id")
   createdAt           DateTime       @default(now())
   updatedAt           DateTime       @updatedAt
   User                User?          @relation(fields: [userId], references: [id])
   userId              String?
+  issueCategoryId     String
 }

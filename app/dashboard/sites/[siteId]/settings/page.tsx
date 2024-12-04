@@ -1,5 +1,6 @@
 import { DeleteSite } from "@/app/actions";
 import { UploadImageForm } from "@/components/dashboard/forms/UploadImageForm";
+import ServiceCategoriesForm from "@/components/dashboard/IssueCategory";
 import { SubmitButton } from "@/components/dashboard/SubmitButtons";
 import WorkingHoursForm from "@/components/dashboard/WorkingHours";
 import { Button } from "@/components/ui/button";
@@ -42,6 +43,21 @@ export default function SettingsSiteRoute({
 
           <CardContent className="grid grid-cols-2 ">
             <WorkingHoursForm siteId={params.siteId} />{" "}
+            {/* Správné předání siteId */}
+          </CardContent>
+        </CardHeader>
+      </Card>
+
+      <Card className="flex">
+        <CardHeader>
+          <CardTitle className="text-white">Issue Category</CardTitle>
+          <CardDescription className="text-green-500">
+            Doporučujeme nastavit vaše ordinační služby zde pro kompletní
+            automatizaci.
+          </CardDescription>
+
+          <CardContent className="grid grid-cols-2 ">
+            <ServiceCategoriesForm siteId={params.siteId} />{" "}
             {/* Správné předání siteId */}
           </CardContent>
         </CardHeader>

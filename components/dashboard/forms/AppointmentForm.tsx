@@ -1,7 +1,7 @@
 "use client";
 
 import { useParams } from "next/navigation";
-import { CreateAppointmentInput } from "@/lib/actions/appointments"; // Import správné funkce
+import { CreateAppointmentInput } from "@/lib/actions/appointments";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import {
@@ -11,11 +11,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Input } from "@mui/material";
-import { FormEvent, useState } from "react";
+import { Input } from "@/components/ui/input";
+import { FormEvent, useEffect, useState } from "react";
+import { fetchIssueCategory } from "@/lib/actions/issueCategory";
+
+interface IssueCategory {
+  id: string;
+  name: string;
+  duration: string;
+}
 
 export default function AppointmentForm() {
-  const { name } = useParams<{ name: string }>();
+  const { name: clinicId } = useParams<{ name: string }>();
 
   const [patientFirstName, setPatientFirstName] = useState("");
   const [patientLastName, setPatientLastName] = useState("");
@@ -26,19 +33,41 @@ export default function AppointmentForm() {
   >("PES");
   const [animalBreed, setAnimalBreed] = useState("");
   const [notes, setNotes] = useState("");
-  const [issueCategory, setIssueCategory] = useState<
-    "AKUTNI_PRIKLAD" | "STRIHANI_DRAPKU" | "KONTROLA" | "OCKOVANI"
-  >("AKUTNI_PRIKLAD");
+  const [issueCategory, setIssueCategory] = useState<string>();
   const [appointmentDateTime, setAppointmentDateTime] = useState(new Date());
+  const [categories, setCategories] = useState<IssueCategory[]>([]);
 
-  if (!name) {
+  useEffect(() => {
+    if (!clinicId) return;
+
+    async function loadCategories() {
+      try {
+        const data = await fetchIssueCategory(clinicId);
+        setCategories(data);
+        if (data.length > 0) {
+          setIssueCategory(data[9].id); // Nastavíme výchozí kategorii
+        }
+      } catch (error) {
+        console.error("Error fetching categories:", error);
+      }
+    }
+
+    loadCategories();
+  }, [clinicId]);
+
+  if (!clinicId) {
     return <p>Error: Subdirectory name is missing in the URL.</p>;
   }
 
   const handleSubmit = async (e: FormEvent) => {
     e.preventDefault();
 
-    const appointmentData = {
+    if (!issueCategory) {
+      alert("Vyberte kategorii problému.");
+      return;
+    }
+
+    const appointmentData: CreateAppointmentInput = {
       patientFirstName,
       patientLastName,
       contactPhone,
@@ -46,9 +75,9 @@ export default function AppointmentForm() {
       animalCategory,
       animalBreed,
       notes,
-      issueCategory,
+      issueCategory, // Již není undefined
       appointmentDateTime,
-      clinicId: name, // Přímo použijeme `name` jako `clinicId`
+      clinicId,
     };
 
     try {
@@ -137,48 +166,23 @@ export default function AppointmentForm() {
           />
         </div>
         <div className="grid gap-2">
-          <Label htmlFor="notes">Poznámky</Label>
-          <Input
-            className="bg-white rounded-md"
-            value={notes}
-            onChange={(e) => setNotes(e.target.value)}
-            id="notes"
-            placeholder="Poznámky"
-          />
-        </div>
-        <div className="grid gap-2">
           <Label htmlFor="issueCategory">Kategorie problému</Label>
           <Select
-            onValueChange={(value) =>
-              setIssueCategory(
-                value as
-                  | "AKUTNI_PRIKLAD"
-                  | "STRIHANI_DRAPKU"
-                  | "KONTROLA"
-                  | "OCKOVANI"
-              )
-            }
-            defaultValue="AKUTNI_PRIKLAD"
+            onValueChange={(value) => setIssueCategory(value)}
+            value={issueCategory}
           >
             <SelectTrigger>
               <SelectValue placeholder="Vyberte kategorii" />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="AKUTNI_PRIKLAD">Akutní případ</SelectItem>
-              <SelectItem value="STRIHANI_DRAPKU">Stříhání drápku</SelectItem>
-              <SelectItem value="KONTROLA">Kontrola</SelectItem>
-              <SelectItem value="OCKOVANI">Očkování</SelectItem>
+              {categories.map((category) => (
+                <SelectItem key={category.id} value={category.id}>
+                  {category.name}
+                </SelectItem>
+              ))}
             </SelectContent>
           </Select>
         </div>
-        //TODO: vytvořit vlastní komponent pro koplexní kalendář co řeší
-        problematiku mazlíčka i doktora 
-        
-        //TODO: vlastní komponent pro komplexní
-        kalendář, v části kdy klinika si vytváři web, přidat možnost vyplnit
-        ordinační hodiny které se propíšou do kalendáře.
-
-        
         <div className="grid gap-2">
           <Label htmlFor="appointmentDateTime">Datum a čas</Label>
           <Input
@@ -198,7 +202,3 @@ export default function AppointmentForm() {
     </form>
   );
 }
-
-//TODO: SMS & E-mail Notifikace
-//TODO: Toast notifikace a přesměrování
-//TODO: Implementace systému dynamické pracovní doby s možností nastavení intervalů, typů služeb a blokování obsazených termínů
