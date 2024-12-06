@@ -7,6 +7,19 @@ import prisma from "./utils/db";
 import { requireUser } from "./utils/requireUser";
 import { stripe } from "./utils/stripe";
 
+const defaultProcedures = [
+  { name: "Vstupní vyšetření", duration: 30 },
+  { name: "Kontrola", duration: 20 },
+  { name: "Očkování", duration: 10 },
+  { name: "Konzultace", duration: 10 },
+  { name: "Drápky, žlázky", duration: 15 },
+  { name: "Zvracení, průjem", duration: 30 },
+  { name: "Kašel, kýchání", duration: 30 },
+  { name: "Stomatologická konzultace", duration: 30 },
+  { name: "Kulhání", duration: 30 },
+  { name: "Jiné", duration: 20 },
+];
+
 export async function CreateSiteAction(prevState: any, formData: FormData) {
   const user = await requireUser();
 
@@ -47,7 +60,8 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
         return submission.reply();
       }
 
-      const response = await prisma.site.create({
+      // Vytvoření stránky (Site)
+      const site = await prisma.site.create({
         data: {
           description: submission.value.description,
           name: submission.value.name,
@@ -56,13 +70,22 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
         },
       });
 
+      // Přidání výchozích procedur
+      await prisma.procedure.createMany({
+        data: defaultProcedures.map((procedure) => ({
+          name: procedure.name,
+          duration: procedure.duration,
+          clinicId: site.id,
+        })),
+      });
+
       return redirect("/dashboard/sites");
     } else {
-      // user alredy has one site dont allow
+      // user already has one site, don't allow
       return redirect("/dashboard/pricing");
     }
   } else if (subStatus.status === "active") {
-    // User has a active plan he can create sites...
+    // User has an active plan, they can create sites...
     const submission = await parseWithZod(formData, {
       schema: SiteCreationSchema({
         async isSubdirectoryUnique() {
@@ -81,7 +104,8 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
       return submission.reply();
     }
 
-    const response = await prisma.site.create({
+    // Vytvoření stránky (Site)
+    const site = await prisma.site.create({
       data: {
         description: submission.value.description,
         name: submission.value.name,
@@ -89,9 +113,20 @@ export async function CreateSiteAction(prevState: any, formData: FormData) {
         userId: user.id,
       },
     });
+
+    // Přidání výchozích procedur
+    await prisma.procedure.createMany({
+      data: defaultProcedures.map((procedure) => ({
+        name: procedure.name,
+        duration: procedure.duration,
+        clinicId: site.id,
+      })),
+    });
+
     return redirect("/dashboard/sites");
   }
 }
+
 export async function CreatePostAction(prevState: any, formData: FormData) {
   const user = await requireUser();
 

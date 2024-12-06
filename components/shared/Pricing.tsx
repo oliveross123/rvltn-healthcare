@@ -25,7 +25,7 @@ export const PricingPlans = [
     id: 0,
     cardTitle: "Jedinec",
     cardDescription: "Vhodné pro jednotlivce",
-    priceTitle: "990 CZK / Měsíc",
+    priceTitle: "1400 CZK / Měsíc",
     beneftis: [
       "První měsíc zdarma!",
       "1 Uživatel",
@@ -37,7 +37,7 @@ export const PricingPlans = [
     id: 1,
     cardTitle: "Klinika",
     cardDescription: "Vhodné pro kliniku kde operuje více veterinářů",
-    priceTitle: "1600 CZK / měsíc",
+    priceTitle: "3000 CZK / Měsíc",
     beneftis: [
       "3 Uživatelé",
       "Nemoezený kalendář a kartotéka",

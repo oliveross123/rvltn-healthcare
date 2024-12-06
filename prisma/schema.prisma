@@ -31,6 +31,7 @@ model User {
 
   // ONE TO ONE RELATIONSHIPS
   Subscription Subscription?
+  Procedure    Procedure[]
 }
 
 model Site {
@@ -41,10 +42,11 @@ model Site {
   createdAt    DateTime @default(now())
   updatedAt    DateTime @updatedAt
 
-  imageUrl String?
-  User     User?   @relation(fields: [userId], references: [id])
-  userId   String?
-  posts    Post[]
+  imageUrl  String?
+  User      User?       @relation(fields: [userId], references: [id])
+  userId    String?
+  posts     Post[]
+  Procedure Procedure[]
 }
 
 model Post {
@@ -108,4 +110,16 @@ model Appointment {
   updatedAt           DateTime       @updatedAt
   User                User?          @relation(fields: [userId], references: [id])
   userId              String?
+}
+
+model Procedure {
+  id        String   @id @default(uuid())
+  name      String
+  duration  Int // Délka v minutách
+  clinicId  String   @map("clinic_id")
+  Site      Site     @relation(fields: [clinicId], references: [id], onDelete: Cascade)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  User      User?    @relation(fields: [userId], references: [id])
+  userId    String?
 }
