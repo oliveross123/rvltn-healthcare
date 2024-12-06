@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev --turbo",
     "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
@@ -55,6 +55,7 @@
     "bcryptjs": "^2.4.3",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.1.1",
+    "compression-webpack-plugin": "^11.1.0",
     "date-fns": "^2.30.0",
     "input-otp": "^1.2.4",
     "libphonenumber-js": "^1.11.7",

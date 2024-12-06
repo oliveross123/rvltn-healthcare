@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/card";
 import { ChevronLeft } from "lucide-react";
 import Link from "next/link";
+import { getProcedures } from "@/lib/actions/procedures";
 
 export default function SettingsSiteRoute({
   params,
