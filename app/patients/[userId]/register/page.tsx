@@ -16,15 +16,21 @@ const Register = async ({ params: { userId } }: SearchParamProps) => {
       {/* TODO: OTP VERIFICATION \ PASSKEY MODEL */}
       <section className="remove-scrollbar container">
         <div className="sub-container max-w-[860px] flex-1 flex-col py-10">
-          <Image
+          {/* <Image
             src="/assets/icons/logo-full.svg"
             height={1000}
             width={1000}
             alt="patient"
             className="mb-12 h-10 w-fit"
-          />
+          /> */}
+          <Link
+            href={"/"}
+            className="-mt-10 text-lg md:text-2xl font-semibold bg-gradient-to-br from-green-500 via-green-500 to-dark-500 w-fit"
+          >
+            rvltnCare
+          </Link>
           <RegisterForm user={user} />
-          <p className="copyright py-12"> © 2024 HealthCare by rvltn</p>{" "}
+          <p className="copyright py-12"> © 2024 rvltnCare | rvltn.cz</p>{" "}
         </div>
       </section>
 

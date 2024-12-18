@@ -1,0 +1,9 @@
+/* Hide non-working days in the calendar */
+.react-datepicker__day--hide-day {
+  display: none;
+}
+
+/* Hide non-working hours in the time dropdown */
+.react-datepicker__time-list-item.hide-time {
+  display: none;
+}
